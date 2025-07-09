@@ -10,7 +10,7 @@ class Error : public std::exception {
     public:
         Error(const std::string& msg, const std::string& file, int line) {
             std::ostringstream oss;
-                oss << "[Erreur] " << msg << " (" << file << ":" << line << ")";
+                oss << "[Error] " << msg << " (" << file << ":" << line << ")";
             fullMessage = oss.str();
         }
 
