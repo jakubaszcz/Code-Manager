@@ -1,11 +1,12 @@
 SRC =	Main.cpp	\
         src/application/Application.cpp \
-        src/data/Data.cpp
+        src/data/Data.cpp	\
+        external/glad/src/glad.c
 
 NAME = CodeManager
 CC = g++
-CFLAGS = -Wall -Wextra -pedantic -O2
-LDFLAGS = -lGL -lGLU -lglut
+CFLAGS = -Wall -Wextra -pedantic -O2 -Iexternal/glad/include
+LDFLAGS = -lglfw -lGL -lGLU -lglut
 
 all: $(NAME)
 
