@@ -5,7 +5,7 @@ SRC =	Main.cpp	\
 
 NAME = CodeManager
 CC = g++
-CFLAGS = -Wall -Wextra -pedantic -O2 -Iexternal/glad/include -Iexternal/nlohmann
+CFLAGS = -Wall -Wextra -pedantic -O2 -Iexternal/glad/include
 LDFLAGS = -lglfw -lGL -lGLU -lglut
 
 all: $(NAME)

@@ -8,7 +8,8 @@ int main() {
 
         if (application.Initialize())
             application.Run();
-        THROW_ERROR("Cannot initialize application");
+        else
+            THROW_ERROR("Cannot initialize application");
     } catch (const Error &e) {
         std::cerr << e.what() << std::endl;
     }
