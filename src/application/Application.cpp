@@ -24,6 +24,7 @@ bool Application::Initialize() {
             glfwCreateWindow(800, 600, "Fenêtre OpenGL", nullptr, nullptr)
         );
 
+        // Make sure the window is load correctly
         if (!_window)
             THROW_ERROR("Failed to create GLFW window");
 
@@ -37,9 +38,16 @@ bool Application::Initialize() {
         // Setup the viewport
         glViewport(0, 0, 800, 600);
 
+        // Make it unique otherwise the Initialize wont work
+        _data = std::make_unique<Data>();
+
         // Initialize data
         if (!_data->Initialize())
 			THROW_ERROR("Failed to initialize data");
+
+        // Starting openGL
+        std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+
     } catch(const Error &e) {
         std::cerr << e.what() << std::endl;
         return false;
@@ -49,9 +57,8 @@ bool Application::Initialize() {
 }
 
 void Application::Run() {
-    std::cout << "run" << std::endl;
-
+	// Start the loop game
     while (1) {
-      std::cout << "1" << std::endl;
+
     }
 }

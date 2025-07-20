@@ -5,9 +5,6 @@
 #include <filesystem>
 #include <unordered_map>
 
-using SectionMap = std::unordered_map<std::string, std::string>;
-using ConfigMap = std::unordered_map<std::string, SectionMap>;
-
 class Data {
 public:
     Data();
@@ -17,6 +14,8 @@ public:
     bool CreateDefaultConfig();
     void LoadConfig();
 
+    std::unordered_map<std::string, std::string> GetConfigMap() const;
+
 private:
-    ConfigMap _configMap;
+    std::unordered_map<std::string, std::string> _configMap;
 };

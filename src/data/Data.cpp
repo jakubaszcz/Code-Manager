@@ -33,25 +33,23 @@ bool Data::CreateDefaultConfig() {
 }
 
 void Data::LoadConfig() {
-
     std::ifstream file("config.cfg");
-    std::string line, currentSection;
+    if (!file.is_open()) {
+        std::cerr << "ERROR: Cannot open config.cfg" << std::endl;
+        return;
+    }
 
-	// Looping on every file's line
+    std::string line;
     while (std::getline(file, line)) {
-        if (line.empty() || line[0] == '#') continue;
-
-        if (line.front() == '[' && line.back() == ']') {
-            currentSection = line.substr(1, line.length() - 2);
-            continue;
-        }
         auto pos = line.find('=');
-        if (pos != std::string::npos && !currentSection.empty()) {
+        if (pos != std::string::npos) {
             std::string key = line.substr(0, pos);
             std::string value = line.substr(pos + 1);
-
-
-            _configMap[currentSection][key] = value;
+            _configMap[key] = value;
+            std::cout << "Added: " << key << " = " << _configMap[key] << std::endl;
         }
     }
+}
+std::unordered_map<std::string, std::string> Data::GetConfigMap() const {
+	return _configMap;
 }

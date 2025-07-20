@@ -28,7 +28,6 @@ class Application {
         // Window
         std::unique_ptr<GLFWwindow, GLFWwindowDeleter> _window;
 
-
         // Subscribers
         std::vector<IListener> _subscribers;
 
