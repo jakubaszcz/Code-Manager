@@ -57,8 +57,18 @@ bool Application::Initialize() {
 }
 
 void Application::Run() {
-	// Start the loop game
-    while (1) {
 
+	// Start the loop game
+    while (!glfwWindowShouldClose(_window.get())) {
+        // Effacer l'écran
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Swap buffers & poll events
+        glfwSwapBuffers(_window.get());
+        glfwPollEvents();
     }
+
+    // Terminate GLFW
+    glfwTerminate();
 }

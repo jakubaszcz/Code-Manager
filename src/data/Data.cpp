@@ -46,7 +46,6 @@ void Data::LoadConfig() {
             std::string key = line.substr(0, pos);
             std::string value = line.substr(pos + 1);
             _configMap[key] = value;
-            std::cout << "Added: " << key << " = " << _configMap[key] << std::endl;
         }
     }
 }
