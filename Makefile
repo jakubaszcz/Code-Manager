@@ -1,12 +1,11 @@
 SRC =	Main.cpp	\
         src/application/Application.cpp \
         src/data/Data.cpp	\
-        external/glad/src/glad.c
 
 NAME = CodeManager
 CC = g++
-CFLAGS = -Wall -Wextra -pedantic -O2 -Iexternal/glad/include
-LDFLAGS = -lglfw -lGL -lGLU -lglut
+CFLAGS = -Wall -Wextra -pedantic -O2 `pkg-config --cflags Qt6Widgets`
+LDFLAGS = `pkg-config --libs Qt6Widgets`
 
 all: $(NAME)
 

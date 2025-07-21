@@ -2,12 +2,12 @@
 #include <iostream>
 #include "includes/error/Error.hpp"
 
-int main() {
+int main(int argc, char *argv[]) {
     try {
         Application application;
 
         if (application.Initialize())
-            application.Run();
+            application.Run(argc, argv);
         else
             THROW_ERROR("Cannot initialize application");
     } catch (const Error &e) {
