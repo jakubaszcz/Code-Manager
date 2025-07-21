@@ -14,15 +14,9 @@ class Application {
 
         bool Initialize();
         int Run(int argc, char* argv[]);
-
-        void Subscribe(const IListener&);
-        void UnSubscribe(const IListener&);
     private:
-        // Window
 
-        // Subscribers
-        std::vector<IListener> _subscribers;
-
+		// Data class
         std::unique_ptr<Data> _data;
     protected:
 };

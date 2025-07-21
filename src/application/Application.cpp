@@ -31,10 +31,18 @@ bool Application::Initialize() {
 }
 
 int Application::Run(int argc, char *argv[]) {
-	// Create Application QT
-	QApplication app(argc, argv);
+	    QApplication app(argc, argv);
 
-	// Allow QTApplication loop
+    QWidget window;
+    window.resize(800, 600);
+
+    // Supprimer les bordures et la barre de titre
+    window.setWindowFlags(Qt::FramelessWindowHint);
+
+    // Optionnel : couleur de fond pour voir la fenêtre
+    window.setStyleSheet("background-color: red;");
+
+    window.show();
+
     return app.exec();
-
 }
