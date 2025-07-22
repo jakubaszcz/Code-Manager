@@ -8,23 +8,19 @@
 #include <QFileDialog>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QVBoxLayout>
+#include <QLabel>
 #include <QWidget>
-
-enum class SoftwareState {
-  Menu,
-  Panel
-};
 
 class Software {
     public:
         Software(std::shared_ptr<Data> data);
 
         void Main();
+        void DrawHeader(QWidget* window, QVBoxLayout *mainLayout);
+        void DrawPanel(QWidget* window, QVBoxLayout *mainLayout);
 
-        void MainMenu();
-        void MainPanel();
     private:
-        SoftwareState _softwareState;
         std::shared_ptr<Data> _data;
     protected:
 };

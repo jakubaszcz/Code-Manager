@@ -1,51 +1,77 @@
 #include "../../includes/software/Software.hpp"
 
-Software::Software(std::shared_ptr<Data> data) : _data(data) {
-    _softwareState = SoftwareState::Panel;
-};
+Software::Software(std::shared_ptr<Data> data) : _data(data) {};
 
 void Software::Main() {
-    switch (_softwareState) {
-        case SoftwareState::Menu:
-            MainMenu();
-            break;
-        case SoftwareState::Panel:
-            MainPanel();
-            break;
-        default: break;
-    }
+    // Window
+    QWidget *window = new QWidget();
+
+    window->resize(1200, 600);
+    window->setWindowFlags(Qt::FramelessWindowHint);
+    window->setAttribute(Qt::WA_DeleteOnClose);
+    window->setStyleSheet(R"(
+        background-color: #332845;
+    )");
+
+    // The way the winodw will be, in Vertical
+    QVBoxLayout *mainLayout = new QVBoxLayout(window);
+
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(0);
+
+    DrawHeader(window, mainLayout);
+    DrawPanel(window, mainLayout);
+    window->setLayout(mainLayout);
+    window->show();
 };
 
-void Software::MainMenu() {
+void Software::DrawHeader(QWidget *window, QVBoxLayout *mainLayout) {
 
-}
+    QWidget *header = new QWidget();
+    header->setFixedHeight(40);
+    header->setStyleSheet("background-color: #444;");
 
-void Software::MainPanel() {
-    QWidget *window = new QWidget();
-    QPushButton *button = new QPushButton("Set the working path", window);
-    QPushButton *button2 = new QPushButton("Open terminal", window);
-    button->setGeometry(QRect(QPoint(100, 100), QSize(200, 50)));
-    button2->setGeometry(QRect(QPoint(20, 200), QSize(100, 20)));
+    QHBoxLayout *headerLayout = new QHBoxLayout(header);
+    headerLayout->setContentsMargins(10, 5, 10, 5);
+    headerLayout->setSpacing(10);
+
+    QPushButton *button = new QPushButton("📁");
+    button->setFixedSize(20, 20);
+    button->setStyleSheet(R"(
+        QPushButton {
+            outline: none;
+            border: none;
+            background-color: #444;
+            color: white;
+        }
+        QPushButton:focus {
+            outline: none;
+        }
+    )");
+    std::string wpath = _data->GetConfigMap()["wpath"];
+    QString text = wpath.empty() ? "No working directory provided." : QString::fromStdString(wpath);
+    QLabel *label = new QLabel(text);
+
+    headerLayout->addWidget(button);
+    headerLayout->addWidget(label);
+    headerLayout->addStretch();
+    mainLayout->addWidget(header);
+
 
     QObject::connect(button, &QPushButton::clicked, window, [=]() {
         QString dir = QFileDialog::getExistingDirectory(window, "Choisir un dossier");
 
         if (!dir.isEmpty()) {
-            std::cout << dir.toStdString() << std::endl;
             _data->ChangeConfig("wpath", dir.toStdString());
-            // Exemple : le stocker dans _data
+            label->setText(dir);
         }
     });
-
-    QObject::connect(button2, &QPushButton::clicked, window, [=]() {
-QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromStdString(_data->GetConfigMap()["wpath"].c_str())));
-
-    });
-
-    window->resize(800, 600);
-    window->setWindowFlags(Qt::FramelessWindowHint);
-    window->setStyleSheet("background-color: red;");
-    window->setAttribute(Qt::WA_DeleteOnClose);
-    window->show();
 }
 
+void Software::DrawPanel(QWidget *window, QVBoxLayout *mainLayout) {
+    QWidget *content = new QWidget();
+    content->setStyleSheet("background-color: #2c2c2c;");
+    content->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    mainLayout->addWidget(content);
+}
