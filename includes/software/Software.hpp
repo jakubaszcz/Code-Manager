@@ -6,6 +6,8 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QDesktopServices>
+#include <QUrl>
 #include <QWidget>
 
 enum class SoftwareState {

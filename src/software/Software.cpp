@@ -23,7 +23,9 @@ void Software::MainMenu() {
 void Software::MainPanel() {
     QWidget *window = new QWidget();
     QPushButton *button = new QPushButton("Set the working path", window);
+    QPushButton *button2 = new QPushButton("Open terminal", window);
     button->setGeometry(QRect(QPoint(100, 100), QSize(200, 50)));
+    button2->setGeometry(QRect(QPoint(20, 200), QSize(100, 20)));
 
     QObject::connect(button, &QPushButton::clicked, window, [=]() {
         QString dir = QFileDialog::getExistingDirectory(window, "Choisir un dossier");
@@ -33,6 +35,11 @@ void Software::MainPanel() {
             _data->ChangeConfig("wpath", dir.toStdString());
             // Exemple : le stocker dans _data
         }
+    });
+
+    QObject::connect(button2, &QPushButton::clicked, window, [=]() {
+QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromStdString(_data->GetConfigMap()["wpath"].c_str())));
+
     });
 
     window->resize(800, 600);
