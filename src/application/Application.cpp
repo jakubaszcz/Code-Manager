@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QPushButton>
+#include <memory>
 
 
 Application::Application() {
@@ -14,7 +15,8 @@ Application::~Application() {
 bool Application::Initialize() {
     try {
         // Make it unique otherwise the Initialize wont work
-        _data = std::make_unique<Data>();
+        _data = std::make_shared<Data>();
+        _software = std::make_unique<Software>(std::shared_ptr<Data>(_data.get()));
 
         // Initialize data
         if (!_data->Initialize())
@@ -31,18 +33,9 @@ bool Application::Initialize() {
 }
 
 int Application::Run(int argc, char *argv[]) {
-	    QApplication app(argc, argv);
+	QApplication app(argc, argv);
 
-    QWidget window;
-    window.resize(800, 600);
-
-    // Supprimer les bordures et la barre de titre
-    window.setWindowFlags(Qt::FramelessWindowHint);
-
-    // Optionnel : couleur de fond pour voir la fenêtre
-    window.setStyleSheet("background-color: red;");
-
-    window.show();
+	_software->Main();
 
     return app.exec();
 }

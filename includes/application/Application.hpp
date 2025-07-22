@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../listeners/IListener.hpp"
 #include "../data/Data.hpp"
+#include "../software/Software.hpp"
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -17,6 +17,11 @@ class Application {
     private:
 
 		// Data class
-        std::unique_ptr<Data> _data;
+        std::shared_ptr<Data> _data;
+
+        // Software class
+        std::unique_ptr<Software> _software;
+
+        // Software Type
     protected:
 };

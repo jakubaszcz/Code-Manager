@@ -52,3 +52,43 @@ void Data::LoadConfig() {
 std::unordered_map<std::string, std::string> Data::GetConfigMap() const {
 	return _configMap;
 }
+
+void Data::ChangeConfig(const std::string& key, const std::string& value) {
+    std::ifstream infile("config.cfg");
+    std::vector<std::string> lines;
+    bool keyFound = false;
+
+    if (!infile.is_open()) {
+        std::cerr << "ERROR: Cannot open config.cfg" << std::endl;
+        return;
+    }
+
+    std::string line;
+    while (std::getline(infile, line)) {
+        auto pos = line.find('=');
+        if (pos != std::string::npos) {
+            std::string currentKey = line.substr(0, pos);
+            if (currentKey == key) {
+                lines.push_back(key + "=" + value);
+                keyFound = true;
+            } else {
+                lines.push_back(line);
+            }
+        } else {
+            lines.push_back(line);
+        }
+    }
+    infile.close();
+
+    if (!keyFound) {
+        lines.push_back(key + "=" + value);
+    }
+
+    // Réécrit tout le fichier
+    std::ofstream outfile("config.cfg", std::ios::trunc);
+    for (const auto& l : lines) {
+        outfile << l << "\n";
+    }
+
+    _configMap[key] = value;
+}

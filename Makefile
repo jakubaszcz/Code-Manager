@@ -1,6 +1,7 @@
 SRC =	Main.cpp	\
         src/application/Application.cpp \
         src/data/Data.cpp	\
+        src/software/Software.cpp	\
 
 NAME = CodeManager
 CC = g++
