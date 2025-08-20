@@ -1,10 +1,10 @@
 #pragma once
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <vector>
-#include <filesystem>
 #include <unordered_map>
+#include <vector>
 
 class Data {
 public:

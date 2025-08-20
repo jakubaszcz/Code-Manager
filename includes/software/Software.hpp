@@ -1,26 +1,29 @@
 #pragma once
 
-#include "../data/Data.hpp"
 #include <memory>
-#include <QApplication>
-#include <QMainWindow>
-#include <QPushButton>
-#include <QFileDialog>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QWidget>
+#include <vector>
+#include "../audio/Audio.hpp"
+#include "../graphic/BodyGraphic.hpp"
+#include "../graphic/HeaderGraphic.hpp"
+#include "../graphic/IGraphic.hpp"
+
+// Forward declaration pour éviter les includes lourds ici
+class Application;
+class HeaderGraphic;
+class BodyGraphic;
+
 
 class Software {
-    public:
-        Software(std::shared_ptr<Data> data);
+public:
+    explicit Software(std::shared_ptr<Application> application);
 
-        void Main();
-        void DrawHeader(QWidget* window, QVBoxLayout *mainLayout);
-        void DrawPanel(QWidget* window, QVBoxLayout *mainLayout);
+    void Draw();
 
-    private:
-        std::shared_ptr<Data> _data;
-    protected:
+private:
+    // Graphics addon for the software
+    std::unique_ptr<HeaderGraphic> _headerGraphic;
+    std::unique_ptr<BodyGraphic> _bodyGraphic;
+
+    // Application with everything I need
+    std::shared_ptr<Application> _application;
 };

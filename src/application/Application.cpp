@@ -1,9 +1,9 @@
 #include "../../includes/application/Application.hpp"
-#include "../../includes/error/Error.hpp"
 #include <QApplication>
 #include <QMainWindow>
 #include <QPushButton>
 #include <memory>
+#include "../../includes/error/Error.hpp"
 
 
 Application::Application() {
@@ -14,17 +14,21 @@ Application::~Application() {
 
 bool Application::Initialize() {
     try {
+
+        _software = std::make_unique<Software>(shared_from_this());
+
+        _audio = std::make_shared<Audio>();
+
         // Make it unique otherwise the Initialize wont work
         _data = std::make_shared<Data>();
-        _software = std::make_unique<Software>(std::shared_ptr<Data>(_data.get()));
 
         // Initialize data
         if (!_data->Initialize())
-			THROW_ERROR("Failed to initialize data");
+            THROW_ERROR("Failed to initialize data");
 
         // Starting openGL
 
-    } catch(const Error &e) {
+    } catch (const Error& e) {
         std::cerr << e.what() << std::endl;
         return false;
     }
@@ -32,10 +36,21 @@ bool Application::Initialize() {
     return true;
 }
 
-int Application::Run(int argc, char *argv[]) {
-	QApplication app(argc, argv);
+std::shared_ptr<Data> Application::GetData() const {
+    return _data;
+}
 
-	_software->Main();
+std::shared_ptr<Audio> Application::GetAudio() const {
+    return _audio;
+}
+
+
+#include "../../includes/graphic/IGraphic.hpp"
+
+int Application::Run(int argc, char *argv[]) {
+    QApplication app(argc, argv);
+
+    _software->Draw();
 
     return app.exec();
 }

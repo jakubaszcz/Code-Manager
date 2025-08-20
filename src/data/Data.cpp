@@ -13,23 +13,24 @@ bool Data::Initialize() {
         std::cout << ">> CreateDefaultConfig() failed" << std::endl;
         return false;
     } else {
-		// Load every file informations
-		LoadConfig();
+        // Load every file informations
+        LoadConfig();
     }
     return true;
 }
 
 
 bool Data::CreateDefaultConfig() {
-	// Check if file already exists
-	if (std::filesystem::exists("config.cfg")) return true;
+    // Check if file already exists
+    if (std::filesystem::exists("config.cfg"))
+        return true;
 
-	// Create config file
-	std::ofstream file("config.cfg");
+    // Create config file
+    std::ofstream file("config.cfg");
 
-	// Close file to avoid multipl openning
-	file.close();
-	return true;
+    // Close file to avoid multipl openning
+    file.close();
+    return true;
 }
 
 void Data::LoadConfig() {
@@ -50,7 +51,7 @@ void Data::LoadConfig() {
     }
 }
 std::unordered_map<std::string, std::string> Data::GetConfigMap() const {
-	return _configMap;
+    return _configMap;
 }
 
 void Data::ChangeConfig(const std::string& key, const std::string& value) {
@@ -86,7 +87,7 @@ void Data::ChangeConfig(const std::string& key, const std::string& value) {
 
     // Réécrit tout le fichier
     std::ofstream outfile("config.cfg", std::ios::trunc);
-    for (const auto& l : lines) {
+    for (const auto& l: lines) {
         outfile << l << "\n";
     }
 

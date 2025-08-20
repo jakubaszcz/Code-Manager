@@ -2,7 +2,9 @@ SRC =	Main.cpp	\
         src/application/Application.cpp \
         src/data/Data.cpp	\
         src/software/Software.cpp	\
-
+        src/audio/Audio.cpp	\
+        src/graphic/HeaderGraphic.cpp   \
+        src/graphic/BodyGraphic.cpp
 NAME = CodeManager
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic -O2 `pkg-config --cflags Qt6Widgets`
