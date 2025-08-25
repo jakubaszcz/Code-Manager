@@ -34,18 +34,6 @@ void BodyGraphic::Draw(QVBoxLayout *layout) {
 
     auto *up = new QShortcut(QKeySequence(Qt::Key_Up), body);
     auto *down = new QShortcut(QKeySequence(Qt::Key_Down), body);
-    auto *escape = new QShortcut(QKeySequence(Qt::Key_Escape), body);
-
-    std::cout << _currentRow << std::endl;
-
-    QObject::connect(escape, &QShortcut::activated, body, [this]() {
-        if (_currentRow < 0)
-            return;
-        if (QWidget *w = QApplication::focusWidget()) {
-            w->clearFocus();
-        }
-        _currentRow = 0;
-    });
 
     QObject::connect(up, &QShortcut::activated, body, [this]() {
         if (_rows.empty())
@@ -169,15 +157,11 @@ QWidget *BodyGraphic::terminalRow() {
             return;
 
 #ifdef Q_OS_WIN
-        // Ouvre cmd.exe dans wpath
         QProcess::startDetached("cmd.exe", QStringList(), wpath);
 #elif defined(Q_OS_MAC)
-        // Ouvre Terminal.app dans wpath
         QProcess::startDetached("open", QStringList() << "-a" << "Terminal" << wpath);
 #else
-        // Linux: on tente plusieurs terminaux courants
         bool started = false;
-        // 1) Debian/Ubuntu alternatives
         started = QProcess::startDetached("x-terminal-emulator",
                                           QStringList() << "--working-directory" << wpath);
         // 2) GNOME Terminal
@@ -185,15 +169,12 @@ QWidget *BodyGraphic::terminalRow() {
             started = QProcess::startDetached("gnome-terminal",
                                               QStringList() << ("--working-directory=" + wpath));
         }
-        // 3) Konsole
         if (!started) {
             started = QProcess::startDetached("konsole",
                                               QStringList() << "--workdir" << wpath);
         }
-        // 4) xterm (fallback) – lance le shell dans le dossier
         if (!started) {
             const QString cmd = QString("cd \"%1\"; exec $SHELL -i").arg(wpath);
-            // Utiliser bash -lc pour exécuter la commande et rester interactif
             started = QProcess::startDetached("xterm",
                                               QStringList() << "-e" << "bash" << "-lc" << cmd);
         }

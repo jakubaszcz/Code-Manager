@@ -22,6 +22,8 @@ bool Application::Initialize() {
         // Make it unique otherwise the Initialize wont work
         _data = std::make_shared<Data>();
 
+        SetCurrentWindow(Windows::CodeManager);
+
         // Initialize data
         if (!_data->Initialize())
             THROW_ERROR("Failed to initialize data");
@@ -44,6 +46,13 @@ std::shared_ptr<Audio> Application::GetAudio() const {
     return _audio;
 }
 
+void Application::SetCurrentWindow(Windows window) {
+    _currentWindow = window;
+}
+
+Windows Application::GetCurrentWindow() const {
+    return _currentWindow;
+}
 
 #include "../../includes/graphic/IGraphic.hpp"
 

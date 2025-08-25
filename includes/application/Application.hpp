@@ -18,6 +18,11 @@
 
 class Software;
 
+enum class Windows {
+    Menu,
+    CodeManager,
+    Setting
+};
 
 class Application : public std::enable_shared_from_this<Application> {
 public:
@@ -29,12 +34,15 @@ public:
     int Run(int argc, char *argv[]);
     std::shared_ptr<Data> GetData() const;
     std::shared_ptr<Audio> GetAudio() const;
+    void SetCurrentWindow(Windows window);
+    Windows GetCurrentWindow() const;
 
 private:
     // Data class
     std::shared_ptr<Data> _data;
     std::shared_ptr<Audio> _audio;
     std::unique_ptr<Software> _software;
+    Windows _currentWindow;
 
 protected:
 };

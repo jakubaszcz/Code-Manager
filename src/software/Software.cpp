@@ -1,42 +1,80 @@
 #include "../../includes/software/Software.hpp"
 #include <memory>
+#include <QShortcut>
 
 
 Software::Software(std::shared_ptr<Application> app) : _application(std::move(app)) {
     _headerGraphic = std::make_unique<HeaderGraphic>(_application);
     _bodyGraphic = std::make_unique<BodyGraphic>(_application);
+    _menuGraphic = std::make_unique<MenuGraphic>(_application);
+    _menuGraphic->SetRedraw([this]() { this->Draw(); });
+
 }
 
 void Software::Draw() {
-    QWidget *window = new QWidget();
+    static QWidget *window = nullptr; // ⚡ Garde la même fenêtre
 
-    window->resize(1200, 800);
-    window->setWindowFlags(Qt::FramelessWindowHint);
-    window->setAttribute(Qt::WA_DeleteOnClose);
-    window->setStyleSheet("background-color: #1e1e1e;");
+    if (!window) {
+        window = new QWidget();
+        window->resize(1200, 800);
+        window->setWindowFlags(Qt::FramelessWindowHint);
+        window->setAttribute(Qt::WA_DeleteOnClose);
+        window->setStyleSheet("background-color: #1e1e1e;");
 
-    // Layout principal vertical
-    QVBoxLayout *headerLayout = new QVBoxLayout(window);
-    headerLayout->setContentsMargins(0, 0, 0, 0);
-    headerLayout->setSpacing(0);
+        auto *escape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
+        QObject::connect(escape, &QShortcut::activated, window, [this]() {
+            switch (_application->GetCurrentWindow()) {
+                case Windows::CodeManager:
+                    _application->SetCurrentWindow(Windows::Menu);
+                    Draw();
+                    break;
+                default: break;
+            }
+        });
 
-    // Header
-    _headerGraphic->Draw(headerLayout);
+        QVBoxLayout *mainLayout = new QVBoxLayout(window);
+        mainLayout->setContentsMargins(0, 0, 0, 0);
+        mainLayout->setSpacing(0);
+        window->setLayout(mainLayout);
+    }
 
-    // Corps principal
-    QWidget *body = new QWidget();
-    body->setStyleSheet("background-color: #2b2b2b;");
+    auto *mainLayout = qobject_cast<QVBoxLayout*>(window->layout());
+    QLayoutItem *child;
+    while ((child = mainLayout->takeAt(0)) != nullptr) {
+        if (child->widget()) child->widget()->deleteLater();
+        delete child;
+    }
 
-    QVBoxLayout *bodyLayout = new QVBoxLayout(body);
-    bodyLayout->setContentsMargins(10, 10, 10, 10);
-    bodyLayout->setSpacing(10);
+    switch (_application->GetCurrentWindow()) {
+        case Windows::Menu: {
+            QWidget *menu = new QWidget();
+            QVBoxLayout *menuLayout = new QVBoxLayout(menu);
 
-    // Body
-    _bodyGraphic->Draw(bodyLayout);
+            _menuGraphic->Draw(menuLayout);
 
-    headerLayout->addWidget(body);
+            mainLayout->addWidget(menu);
+            break;
+        }
+        case Windows::Setting:
+            mainLayout->addWidget(new QLabel("Settings scene"));
+            break;
+        case Windows::CodeManager: {
+            QWidget *header = new QWidget();
+            QVBoxLayout *headerLayout = new QVBoxLayout(header);
+            _headerGraphic->Draw(headerLayout);
 
-    window->setLayout(headerLayout);
-    window->setLayout(bodyLayout);
+            QWidget *body = new QWidget();
+            body->setStyleSheet("background-color: #2b2b2b;");
+            QVBoxLayout *bodyLayout = new QVBoxLayout(body);
+            _bodyGraphic->Draw(bodyLayout);
+
+            headerLayout->addWidget(body);
+            mainLayout->addWidget(header);
+            break;
+        }
+        default: break;
+    }
+
     window->show();
 }
+
