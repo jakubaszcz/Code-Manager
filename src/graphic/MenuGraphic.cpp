@@ -33,7 +33,7 @@ void MenuGraphic::Draw(QVBoxLayout *layout) {
 
     // Connexions
     QObject::connect(codeManagerButton, &QPushButton::clicked, codeManagerButton, [this]() {
-        _application->SetCurrentWindow(Windows::CodeManager);
+        _application->SetCurrentWindow(Windows::Workflow);
         if (_redraw)
             _redraw();
     });

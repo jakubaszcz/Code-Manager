@@ -20,7 +20,7 @@ class Software;
 
 enum class Windows {
     Menu,
-    CodeManager,
+    Workflow,
     Setting
 };
 

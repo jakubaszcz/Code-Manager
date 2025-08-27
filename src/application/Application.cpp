@@ -22,7 +22,7 @@ bool Application::Initialize() {
         // Make it unique otherwise the Initialize wont work
         _data = std::make_shared<Data>();
 
-        SetCurrentWindow(Windows::CodeManager);
+        SetCurrentWindow(Windows::Workflow);
 
         // Initialize data
         if (!_data->Initialize())

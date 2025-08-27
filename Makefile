@@ -3,8 +3,7 @@ SRC =	Main.cpp	\
         src/data/Data.cpp	\
         src/software/Software.cpp	\
         src/audio/Audio.cpp	\
-        src/graphic/HeaderGraphic.cpp   \
-        src/graphic/BodyGraphic.cpp	\
+        src/graphic/WorkflowGraphic.cpp	\
         src/graphic/MenuGraphic.cpp
 NAME = CodeManager
 CC = g++

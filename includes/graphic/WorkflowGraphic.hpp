@@ -17,14 +17,16 @@
 #include "../application/Application.hpp"
 #include "IGraphic.hpp"
 
-class BodyGraphic : public IGraphic<QVBoxLayout *> {
+class WorkflowGraphic : public IGraphic<QVBoxLayout *> {
 public:
-    BodyGraphic(std::shared_ptr<Application> application);
+    WorkflowGraphic(std::shared_ptr<Application> application);
 
     QWidget *fileManagerRow();
     QWidget *commandRow();
     QWidget *terminalRow();
     void Draw(QVBoxLayout *) override;
+    void DrawHeader(QVBoxLayout *);
+    void DrawBody(QVBoxLayout *);
 
 private:
     std::vector<QWidget *> _rows;
