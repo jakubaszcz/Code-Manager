@@ -4,6 +4,8 @@ SRC =	Main.cpp	\
         src/software/Software.cpp	\
         src/audio/Audio.cpp	\
         src/graphic/WorkflowGraphic.cpp	\
+        src/graphic/workflow/WorkflowHeaderGraphic.cpp	\
+        src/graphic/workflow/WorkflowBodyGraphic.cpp	\
         src/graphic/MenuGraphic.cpp
 NAME = CodeManager
 CC = g++

@@ -10,15 +10,13 @@ void MenuGraphic::Draw(QVBoxLayout *layout) {
     QPushButton *settingsButton = new QPushButton("⚙️");
     QPushButton *exitButton = new QPushButton("⏻");
 
-    // Boutons carrés + style
     const int side = 120;
     auto styleSquare = QString("QPushButton {"
                                "  border: none;"
                                "  width:%1px; height:%1px;"
                                "  font-size:36px;"
                                "  color:#ffffff;"
-                               "  background:#3a3a3a;"
-                               "  border:1px solid #505050;"
+                               "  background:#2E2E2E;"
                                "}"
                                "QPushButton:hover { background:#4a4a4a; }"
                                "QPushButton:pressed { background:#2f2f2f; }")
@@ -31,7 +29,6 @@ void MenuGraphic::Draw(QVBoxLayout *layout) {
         btn->setFocusPolicy(Qt::NoFocus);
     }
 
-    // Connexions
     QObject::connect(codeManagerButton, &QPushButton::clicked, codeManagerButton, [this]() {
         _application->SetCurrentWindow(Windows::Workflow);
         if (_redraw)
