@@ -20,15 +20,17 @@
 class WorkflowGraphic : public IGraphic<QVBoxLayout *> {
 public:
     WorkflowGraphic(std::shared_ptr<Application> application);
+    void Draw(QVBoxLayout *) override;
 
+private:
+    void DrawHeader(QVBoxLayout *);
+
+    void DrawBody(QVBoxLayout *);
     QWidget *fileManagerRow();
     QWidget *commandRow();
     QWidget *terminalRow();
-    void Draw(QVBoxLayout *) override;
-    void DrawHeader(QVBoxLayout *);
-    void DrawBody(QVBoxLayout *);
 
-private:
+
     std::vector<QWidget *> _rows;
     int _currentRow;
 };

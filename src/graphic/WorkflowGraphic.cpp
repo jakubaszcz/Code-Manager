@@ -9,10 +9,12 @@
 #include "../../includes/graphic/WorkflowGraphic.hpp"
 
 
-WorkflowGraphic::WorkflowGraphic(std::shared_ptr<Application> application) : IGraphic<QVBoxLayout *>(application) {
-}
+WorkflowGraphic::WorkflowGraphic(std::shared_ptr<Application> application) : IGraphic<QVBoxLayout *>(application) {}
 
 void WorkflowGraphic::Draw(QVBoxLayout *layout) {
+    // Draw Header
     DrawHeader(layout);
+
+    // Draw Body
     DrawBody(layout);
 }

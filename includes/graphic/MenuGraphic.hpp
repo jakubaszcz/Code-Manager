@@ -26,5 +26,11 @@ public:
     void SetRedraw(std::function<void()> redraw) { _redraw = std::move(redraw); }
 
 private:
+    QPushButton *WorkflowButton();
+    QPushButton *SettingButton();
+    QPushButton *ExitButton();
+
     std::function<void()> _redraw;
+    std::vector<QPushButton*> _buttons;
+    int _currentButton;
 };

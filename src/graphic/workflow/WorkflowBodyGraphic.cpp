@@ -71,10 +71,8 @@ void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
         }
     };
 
-    auto *enter1 = new QShortcut(QKeySequence(Qt::Key_Return), body);
-    auto *enter2 = new QShortcut(QKeySequence(Qt::Key_Enter), body);
-    QObject::connect(enter1, &QShortcut::activated, body, triggerCurrentRow);
-    QObject::connect(enter2, &QShortcut::activated, body, triggerCurrentRow);
+    auto *enter = new QShortcut(QKeySequence(Qt::Key_Enter), body);
+    QObject::connect(enter, &QShortcut::activated, body, triggerCurrentRow);
 }
 
 

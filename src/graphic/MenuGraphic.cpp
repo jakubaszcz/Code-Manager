@@ -6,45 +6,36 @@ MenuGraphic::MenuGraphic(std::shared_ptr<Application> application) : IGraphic<QV
 }
 
 void MenuGraphic::Draw(QVBoxLayout *layout) {
-    QPushButton *codeManagerButton = new QPushButton("🖥️");
-    QPushButton *settingsButton = new QPushButton("⚙️");
-    QPushButton *exitButton = new QPushButton("⏻");
 
-    const int side = 120;
-    auto styleSquare = QString("QPushButton {"
-                               "  border: none;"
-                               "  width:%1px; height:%1px;"
-                               "  font-size:36px;"
-                               "  color:#ffffff;"
-                               "  background:#2E2E2E;"
-                               "}"
-                               "QPushButton:hover { background:#4a4a4a; }"
-                               "QPushButton:pressed { background:#2f2f2f; }")
-                               .arg(side);
+    _buttons.clear();
+    _currentButton = 0;
 
-    for (auto *btn: {codeManagerButton, settingsButton, exitButton}) {
-        btn->setFixedSize(side, side);
-        btn->setStyleSheet(styleSquare);
-        btn->setCursor(Qt::PointingHandCursor);
-        btn->setFocusPolicy(Qt::NoFocus);
-    }
+    _buttons.push_back(WorkflowButton());
+    _buttons.push_back(SettingButton());
+    _buttons.push_back(ExitButton());
 
-    QObject::connect(codeManagerButton, &QPushButton::clicked, codeManagerButton, [this]() {
-        _application->SetCurrentWindow(Windows::Workflow);
-        if (_redraw)
-            _redraw();
+
+    auto *right = new QShortcut(QKeySequence(Qt::Key_Right), layout);
+    auto *left = new QShortcut(QKeySequence(Qt::Key_Left), layout);
+
+    QObject::connect(left, &QShortcut::activated, layout, [this]() {
+        if (_buttons.empty())
+            return;
+        if (_currentButton == 0)
+            _currentButton = static_cast<int>(_buttons.size());
+        _currentButton = (_currentButton - 1 + static_cast<int>(_buttons.size())) % static_cast<int>(_buttons.size());
+        _buttons[_currentButton]->setFocus(Qt::ShortcutFocusReason);
     });
 
-    QObject::connect(settingsButton, &QPushButton::clicked, settingsButton, [this]() {
-        _application->SetCurrentWindow(Windows::Setting);
-        if (_redraw)
-            _redraw();
+    QObject::connect(right, &QShortcut::activated, layout, [this]() {
+        if (_buttons.empty())
+            return;
+        if (_currentButton == 0)
+            _currentButton = 0;
+        else
+            _currentButton = (_currentButton + 1) % static_cast<int>(_buttons.size());
+        _buttons[_currentButton]->setFocus(Qt::ShortcutFocusReason);
     });
-
-    QObject::connect(exitButton, &QPushButton::clicked, exitButton, [this]() { QApplication::quit(); });
-
-    layout->setSpacing(0);
-    layout->setContentsMargins(0, 0, 0, 0);
 
     QVBoxLayout *centerColumn = new QVBoxLayout();
     centerColumn->setAlignment(Qt::AlignCenter);
@@ -52,13 +43,92 @@ void MenuGraphic::Draw(QVBoxLayout *layout) {
     QHBoxLayout *row = new QHBoxLayout();
     row->setSpacing(48);
     row->setAlignment(Qt::AlignCenter);
-    row->addWidget(codeManagerButton);
-    row->addWidget(settingsButton);
-    row->addWidget(exitButton);
 
+    for (auto *button : _buttons) {
+        row->addWidget(button);
+    }
     centerColumn->addLayout(row);
 
+    layout->setSpacing(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->addStretch();
     layout->addLayout(centerColumn);
     layout->addStretch();
+}
+
+QPushButton *MenuGraphic::WorkflowButton() {
+    QPushButton *workflowButton = new QPushButton("🖥️");
+
+    workflowButton->setCursor(Qt::PointingHandCursor);
+    workflowButton->setFocusPolicy(Qt::StrongFocus);
+    workflowButton->setFixedSize(96, 96); // taille via API Qt
+
+    workflowButton->setStyleSheet("QPushButton {"
+                                  "  border: none;"
+                                  "  font-size:36px;"
+                                  "  color:#ffffff;"
+                                  "  background:#2E2E2E;"
+                                  "}"
+                                  "QPushButton:hover { background:#4a4a4a; }"
+                                  "QPushButton:pressed { background:#2f2f2f; }"
+                                  "QPushButton:focus {"
+                                  "  background:#3a3a3a;"
+                                  "  outline: none;"
+                                  "}");
+    QObject::connect(workflowButton, &QPushButton::clicked, workflowButton, [this]() {
+        _application->SetCurrentWindow(Windows::Workflow);
+        if (_redraw)
+            _redraw();
+    });
+    return workflowButton;
+}
+
+QPushButton *MenuGraphic::SettingButton() {
+    QPushButton *settingButton = new QPushButton("🛠️");
+
+    settingButton->setCursor(Qt::PointingHandCursor);
+    settingButton->setFocusPolicy(Qt::StrongFocus);
+    settingButton->setFixedSize(96, 96);
+
+    settingButton->setStyleSheet("QPushButton {"
+                                 "  border: none;"
+                                 "  font-size:36px;"
+                                 "  color:#ffffff;"
+                                 "  background:#2E2E2E;"
+                                 "}"
+                                 "QPushButton:hover { background:#4a4a4a; }"
+                                 "QPushButton:pressed { background:#2f2f2f; }"
+                                 "QPushButton:focus {"
+                                 "  background:#3a3a3a;"
+                                 "  outline: none;"
+                                 "}");
+    QObject::connect(settingButton, &QPushButton::clicked, settingButton, [this]() {
+        _application->SetCurrentWindow(Windows::Setting);
+        if (_redraw)
+            _redraw();
+    });
+    return settingButton;
+}
+
+QPushButton *MenuGraphic::ExitButton() {
+    QPushButton *exitButton = new QPushButton("🚪");
+
+    exitButton->setCursor(Qt::PointingHandCursor);
+    exitButton->setFocusPolicy(Qt::StrongFocus);
+    exitButton->setFixedSize(96, 96);
+
+    exitButton->setStyleSheet("QPushButton {"
+                              "  border: none;"
+                              "  font-size:36px;"
+                              "  color:#ffffff;"
+                              "  background:#2E2E2E;"
+                              "}"
+                              "QPushButton:hover { background:#4a4a4a; }"
+                              "QPushButton:pressed { background:#2f2f2f; }"
+                              "QPushButton:focus {"
+                              "  background:#3a3a3a;"
+                              "  outline: none;"
+                              "}");
+    QObject::connect(exitButton, &QPushButton::clicked, exitButton, [this]() { QApplication::quit(); });
+    return exitButton;
 }
