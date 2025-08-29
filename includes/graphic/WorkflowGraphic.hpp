@@ -1,5 +1,9 @@
 #pragma once
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 #include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
@@ -16,6 +20,10 @@
 #include <vector>
 #include "../application/Application.hpp"
 #include "IGraphic.hpp"
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 class WorkflowGraphic : public IGraphic<QVBoxLayout *> {
 public:

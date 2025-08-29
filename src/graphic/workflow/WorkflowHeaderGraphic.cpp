@@ -8,6 +8,10 @@
 #include <QWidget>
 #include "../../../includes/graphic/WorkflowGraphic.hpp"
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 void WorkflowGraphic::DrawHeader(QVBoxLayout *layout) {
     QWidget *header = new QWidget();
     header->setFixedHeight(40);

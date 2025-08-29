@@ -1,5 +1,9 @@
 #pragma once
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 #include <memory>
 #include <vector>
 #include "../audio/Audio.hpp"
@@ -7,11 +11,18 @@
 #include "../graphic/MenuGraphic.hpp"
 #include "../graphic/WorkflowGraphic.hpp"
 
-// Forward declaration pour éviter les includes lourds ici
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 class Application;
 class HeaderGraphic;
 class MenuGraphic;
 class WorkflowGraphic;
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 class Software {
 public:

@@ -1,6 +1,9 @@
 #pragma once
 
 
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFileDialog>
@@ -15,6 +18,9 @@
 #include <vector>
 #include "../application/Application.hpp"
 #include "IGraphic.hpp"
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
 class MenuGraphic : public IGraphic<QVBoxLayout *> {

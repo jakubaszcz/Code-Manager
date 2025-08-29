@@ -3,6 +3,10 @@
 #include "includes/application/Application.hpp"
 #include "includes/error/Error.hpp"
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 int main(int argc, char *argv[]) {
     try {
         std::shared_ptr<Application> application = std::make_shared<Application>();

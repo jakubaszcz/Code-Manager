@@ -1,8 +1,16 @@
 #pragma once
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 #include <exception>
 #include <sstream>
 #include <string>
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 class Error : public std::exception {
 private:
@@ -17,5 +25,9 @@ public:
 
     const char *what() const noexcept override { return fullMessage.c_str(); }
 };
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 #define THROW_ERROR(msg) throw Error((msg), __FILE__, __LINE__)

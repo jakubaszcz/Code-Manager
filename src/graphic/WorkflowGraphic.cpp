@@ -1,3 +1,4 @@
+#include "../../includes/graphic/WorkflowGraphic.hpp"
 #include <QDesktopServices>
 #include <QHBoxLayout>
 #include <QLineEdit>
@@ -6,10 +7,17 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QWidget>
-#include "../../includes/graphic/WorkflowGraphic.hpp"
 
 
-WorkflowGraphic::WorkflowGraphic(std::shared_ptr<Application> application) : IGraphic<QVBoxLayout *>(application) {}
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+WorkflowGraphic::WorkflowGraphic(std::shared_ptr<Application> application) : IGraphic<QVBoxLayout *>(application) {
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 void WorkflowGraphic::Draw(QVBoxLayout *layout) {
     // Draw Header

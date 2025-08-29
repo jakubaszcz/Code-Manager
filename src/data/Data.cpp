@@ -1,11 +1,23 @@
 #include "../../includes/data/Data.hpp"
 #include "../../includes/error/Error.hpp"
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 Data::Data() {
 }
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 Data::~Data() {
 }
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 bool Data::Initialize() {
 
@@ -20,6 +32,9 @@ bool Data::Initialize() {
 }
 
 
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 bool Data::CreateDefaultConfig() {
     // Check if file already exists
     if (std::filesystem::exists("config.cfg"))
@@ -32,6 +47,10 @@ bool Data::CreateDefaultConfig() {
     file.close();
     return true;
 }
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 void Data::LoadConfig() {
     std::ifstream file("config.cfg");
@@ -50,9 +69,18 @@ void Data::LoadConfig() {
         }
     }
 }
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 std::unordered_map<std::string, std::string> Data::GetConfigMap() const {
     return _configMap;
 }
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 void Data::ChangeConfig(const std::string& key, const std::string& value) {
     std::ifstream infile("config.cfg");

@@ -3,11 +3,18 @@
 #include <QShortcut>
 
 
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 Software::Software(std::shared_ptr<Application> app) : _application(std::move(app)) {
     _workflowGraphic = std::make_unique<WorkflowGraphic>(_application);
     _menuGraphic = std::make_unique<MenuGraphic>(_application);
     _menuGraphic->SetRedraw([this]() { this->Draw(); });
 }
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 void Software::Draw() {
     static QWidget *window = nullptr;
@@ -60,4 +67,3 @@ void Software::Draw() {
     mLayout->addWidget(bWidget);
     window->show();
 }
-

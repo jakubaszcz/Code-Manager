@@ -1,5 +1,9 @@
 #pragma once
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFileDialog>
@@ -16,13 +20,25 @@
 #include "../data/Data.hpp"
 #include "../software/Software.hpp"
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 class Software;
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 enum class Windows {
     Menu,
     Workflow,
     Setting
 };
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 
 class Application : public std::enable_shared_from_this<Application> {
 public:
