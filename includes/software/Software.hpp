@@ -26,9 +26,17 @@ class WorkflowGraphic;
 
 class Software {
 public:
+
+    struct WindowSize {
+        int width;
+        int height;
+    };
+
     explicit Software(std::shared_ptr<Application> application);
 
     void Draw();
+    void SetWindowSize(WindowSize);
+    WindowSize GetWindowSize() const;
 
 private:
     // Graphics addon for the software
@@ -37,4 +45,6 @@ private:
 
     // Application with everything I need
     std::shared_ptr<Application> _application;
+    WindowSize _windowSize{600, 400};
+    //
 };

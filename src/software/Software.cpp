@@ -21,7 +21,7 @@ void Software::Draw() {
 
     if (!window) {
         window = new QWidget();
-        window->resize(1200, 800);
+        window->resize(_windowSize.width, _windowSize.height);
         window->setWindowFlags(Qt::FramelessWindowHint);
         window->setAttribute(Qt::WA_DeleteOnClose);
         window->setStyleSheet("background-color: #1e1e1e;");
@@ -66,4 +66,20 @@ void Software::Draw() {
     }
     mLayout->addWidget(bWidget);
     window->show();
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+void Software::SetWindowSize(WindowSize size) {
+    _windowSize = size;
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+Software::WindowSize Software::GetWindowSize() const {
+    return _windowSize;
 }
