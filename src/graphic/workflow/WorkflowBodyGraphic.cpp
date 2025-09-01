@@ -13,80 +13,135 @@
 
 
 void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
-    QWidget *body = new QWidget();
-    QVBoxLayout *bodyLayout = new QVBoxLayout(body);
-    bodyLayout->setContentsMargins(0, 0, 0, 0);
-    bodyLayout->setSpacing(0);
 
     _rows.clear();
     _currentRow = 0;
 
-    if (QWidget *w = fileManagerRow())
+    if (QWidget *w = FileManagerRow())
         _rows.push_back(w);
-    if (QWidget *w = terminalRow())
+    if (QWidget *w = TerminalRow())
         _rows.push_back(w);
-    if (QWidget *w = commandRow())
+    if (QWidget *w = CommandRow())
         _rows.push_back(w);
+
+
+    // Draw Tabs
+    DrawTabs(layout);
 
     for (auto w: _rows)
-        bodyLayout->addWidget(w);
-    bodyLayout->addStretch();
+        layout->addWidget(w);
+    layout->addStretch();
 
-    layout->addWidget(body);
+    // Key Sequence
+    auto *up = new QShortcut(QKeySequence(Qt::Key_Up), layout);
+    auto *down = new QShortcut(QKeySequence(Qt::Key_Down), layout);
+    auto *enter = new QShortcut(QKeySequence(Qt::Key_Enter), layout);
 
-    auto *up = new QShortcut(QKeySequence(Qt::Key_Up), body);
-    auto *down = new QShortcut(QKeySequence(Qt::Key_Down), body);
+    // Key Event
+    {
 
-    QObject::connect(up, &QShortcut::activated, body, [this]() {
-        if (_rows.empty())
-            return;
-        if (_currentRow == 0)
-            _currentRow = static_cast<int>(_rows.size());
-        _currentRow = (_currentRow - 1 + static_cast<int>(_rows.size())) % static_cast<int>(_rows.size());
-        _rows[_currentRow]->setFocus(Qt::ShortcutFocusReason);
-    });
-
-    QObject::connect(down, &QShortcut::activated, body, [this]() {
-        if (_rows.empty())
-            return;
-        if (_currentRow == 0)
-            _currentRow = 0;
-        else
-            _currentRow = (_currentRow + 1) % static_cast<int>(_rows.size());
-        _rows[_currentRow]->setFocus(Qt::ShortcutFocusReason);
-    });
-
-    if (!_rows.empty())
-        _rows[_currentRow]->setFocus(Qt::OtherFocusReason);
-
-    auto triggerCurrentRow = [this]() {
-        if (_rows.empty())
-            return;
-        QWidget *row = _rows[_currentRow];
-
-        if (auto *btn = qobject_cast<QPushButton *>(row->focusProxy())) {
-            if (btn->isEnabled() && btn->isVisible()) {
-                btn->click();
+        QObject::connect(up, &QShortcut::activated, layout, [this]() {
+            if (_rows.empty())
                 return;
-            }
+            if (_currentRow == 0)
+                _currentRow = static_cast<int>(_rows.size());
+            _currentRow = (_currentRow - 1 + static_cast<int>(_rows.size())) % static_cast<int>(_rows.size());
+            _rows[_currentRow]->setFocus(Qt::ShortcutFocusReason);
+        });
+
+        QObject::connect(down, &QShortcut::activated, layout, [this]() {
+            if (_rows.empty())
+                return;
+            if (_currentRow == 0)
+                _currentRow = 0;
+            else
+                _currentRow = (_currentRow + 1) % static_cast<int>(_rows.size());
+            _rows[_currentRow]->setFocus(Qt::ShortcutFocusReason);
+        });
+
+        if (!_rows.empty()) {
+            _rows[_currentRow]->setFocus(Qt::OtherFocusReason);
         }
 
-        if (auto *btn2 = row->findChild<QPushButton *>()) {
-            if (btn2->isEnabled() && btn2->isVisible()) {
-                btn2->click();
-            }
-        }
-    };
+        auto triggerCurrentRow = [this]() {
+            if (_rows.empty())
+                return;
+            QWidget *row = _rows[_currentRow];
 
-    auto *enter = new QShortcut(QKeySequence(Qt::Key_Enter), body);
-    QObject::connect(enter, &QShortcut::activated, body, triggerCurrentRow);
+            if (auto *btn = qobject_cast<QPushButton *>(row->focusProxy())) {
+                if (btn->isEnabled() && btn->isVisible()) {
+                    btn->click();
+                    return;
+                }
+            }
+
+            if (auto *btn2 = row->findChild<QPushButton *>()) {
+                if (btn2->isEnabled() && btn2->isVisible()) {
+                    btn2->click();
+                }
+            }
+        };
+
+        QObject::connect(enter, &QShortcut::activated, layout, triggerCurrentRow);
+    }
 }
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QWidget *WorkflowGraphic::fileManagerRow() {
+void WorkflowGraphic::DrawTabs(QVBoxLayout *layout) {
+
+
+    std::vector<std::pair<std::string, std::function<void()>>> buttonsEvent = {
+            {"Workflow", [this]() { SetTab(Tab::Workflow); }},
+            {"Command", [this]() { SetTab(Tab::Command); }},
+            {"Application", [this]() { SetTab(Tab::Application); }}};
+
+    QWidget *tabsWidget = new QWidget;
+    auto *h = new QHBoxLayout(tabsWidget);
+    h->setContentsMargins(0, 0, 0, 0);
+    h->setSpacing(0);
+
+    for (auto& [name, event]: buttonsEvent) {
+        QPushButton *btn = Tabs(name, event);
+        h->addWidget(btn, 1);
+    }
+
+    tabsWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    layout->addWidget(tabsWidget);
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+QPushButton *WorkflowGraphic::Tabs(const std::string& label, std::function<void()> onClick) {
+    auto *btn = new QPushButton(QString::fromStdString(label));
+    btn->setCursor(Qt::PointingHandCursor);
+    btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    btn->setMinimumWidth(0);
+    btn->setFlat(true);
+    btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #2a2a2a; "
+                       "color: white; }"
+                       "QPushButton:hover { background-color: #343434; }"
+                       "QPushButton:pressed { background-color: #1b1b1b; }"
+                       "QPushButton:focus { background-color: #343434; border: none; outline: none; }");
+
+    // Key Event
+    {
+
+        QObject::connect(btn, &QPushButton::clicked, btn, [onClick]() { onClick(); });
+    }
+
+    return btn;
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+QWidget *WorkflowGraphic::FileManagerRow() {
     QWidget *row = new QWidget;
     QHBoxLayout *h = new QHBoxLayout(row);
     h->setContentsMargins(0, 0, 0, 0);
@@ -117,15 +172,19 @@ QWidget *WorkflowGraphic::fileManagerRow() {
                        " outline: none;"
                        "}");
 
-    QObject::connect(btn, &QPushButton::clicked, [this]() {
-        const auto cfg = _application->GetData()->GetConfigMap();
-        const auto it = cfg.find("wpath");
-        const QString startDir = (it != cfg.end()) ? QString::fromStdString(it->second) : QString();
-        QDesktopServices::openUrl(QUrl::fromLocalFile(startDir));
-    });
+    // Event
+    {
+
+        QObject::connect(btn, &QPushButton::clicked, [this]() {
+            const auto cfg = _application->GetData()->GetConfigMap();
+            const auto it = cfg.find("wpath");
+            const QString startDir = (it != cfg.end()) ? QString::fromStdString(it->second) : QString();
+            QDesktopServices::openUrl(QUrl::fromLocalFile(startDir));
+        });
+    }
 
 
-    h->addWidget(btn, /*stretch*/ 1);
+    h->addWidget(btn, 1);
 
     row->setFocusProxy(btn);
 
@@ -136,7 +195,7 @@ QWidget *WorkflowGraphic::fileManagerRow() {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QWidget *WorkflowGraphic::terminalRow() {
+QWidget *WorkflowGraphic::TerminalRow() {
     QWidget *row = new QWidget;
     QHBoxLayout *h = new QHBoxLayout(row);
     h->setContentsMargins(0, 0, 0, 0);
@@ -167,23 +226,25 @@ QWidget *WorkflowGraphic::terminalRow() {
                        " outline: none;"
                        "}");
 
-    QObject::connect(btn, &QPushButton::clicked, [this]() {
-        const auto cfg = _application->GetData()->GetConfigMap();
-        const auto it = cfg.find("wpath");
-        const QString wpath = (it != cfg.end()) ? QString::fromStdString(it->second) : QString();
-        if (wpath.isEmpty())
-            return;
+    // Event
+    {
+
+        QObject::connect(btn, &QPushButton::clicked, [this]() {
+            const auto cfg = _application->GetData()->GetConfigMap();
+            const auto it = cfg.find("wpath");
+            const QString wpath = (it != cfg.end()) ? QString::fromStdString(it->second) : QString();
+            if (wpath.isEmpty())
+                return;
 
 
 #ifdef Q_OS_WIN
-        QProcess::startDetached("cmd.exe", QStringList(), wpath);
+            QProcess::startDetached("cmd.exe", QStringList(), wpath);
 #elif defined(Q_OS_MAC)
             QProcess::startDetached("open", QStringList() << "-a" << "Terminal" << wpath);
 #else
             bool started = false;
             started = QProcess::startDetached("x-terminal-emulator",
                                               QStringList() << "--working-directory" << wpath);
-            // 2) GNOME Terminal
             if (!started) {
                 started = QProcess::startDetached("gnome-terminal",
                                                   QStringList() << ("--working-directory=" + wpath));
@@ -199,7 +260,8 @@ QWidget *WorkflowGraphic::terminalRow() {
             }
             Q_UNUSED(started);
 #endif
-    });
+        });
+    }
 
     h->addWidget(btn, 1);
 
@@ -212,7 +274,7 @@ QWidget *WorkflowGraphic::terminalRow() {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QWidget *WorkflowGraphic::commandRow() {
+QWidget *WorkflowGraphic::CommandRow() {
     QWidget *row = new QWidget;
     row->setFocusPolicy(Qt::StrongFocus);
     row->setStyleSheet("QWidget {"
@@ -253,16 +315,18 @@ QWidget *WorkflowGraphic::commandRow() {
                        " outline: none;"
                        "}");
 
-    // Champ input à droite
     auto *input = new QLineEdit(row);
     if (!input)
         return nullptr;
+
     {
+
         const auto cfg = _application->GetData()->GetConfigMap();
         const auto it = cfg.find("customCommand");
         const std::string customCmd = (it != cfg.end()) ? it->second : std::string();
         input->setPlaceholderText(QString::fromStdString(customCmd.empty() ? "Enter custom command." : customCmd));
     }
+
     input->setClearButtonEnabled(true);
     input->setFixedWidth(240);
     input->setStyleSheet("QLineEdit {"
@@ -275,37 +339,41 @@ QWidget *WorkflowGraphic::commandRow() {
     h->addWidget(btn, 1);
     h->addWidget(input, 0, Qt::AlignRight);
 
-    QObject::connect(input, &QLineEdit::returnPressed, row, [this, input]() {
-        const QString cmd = input->text().trimmed();
-        if (cmd.isEmpty())
-            return;
-        _application->GetData()->ChangeConfig("customCommand", input->text().toStdString());
-        input->setPlaceholderText(cmd);
-        input->clear();
-    });
+    // Event
+    {
 
-    QObject::connect(btn, &QPushButton::clicked, row, [this, input]() {
-        QString cmd = input->text().trimmed();
-        if (cmd.isEmpty()) {
-            const std::string saved = _application->GetData()->GetConfigMap()["customCommand"];
-            cmd = QString::fromStdString(saved);
-        }
-        if (cmd.isEmpty())
-            return;
+        QObject::connect(input, &QLineEdit::returnPressed, row, [this, input]() {
+            const QString cmd = input->text().trimmed();
+            if (cmd.isEmpty())
+                return;
+            _application->GetData()->ChangeConfig("customCommand", input->text().toStdString());
+            input->setPlaceholderText(cmd);
+            input->clear();
+        });
 
-        const QString oldDir = QDir::currentPath();
-        const QString newDir = QString::fromStdString(_application->GetData()->GetConfigMap()["wpath"]);
+        QObject::connect(btn, &QPushButton::clicked, row, [this, input]() {
+            QString cmd = input->text().trimmed();
+            if (cmd.isEmpty()) {
+                const std::string saved = _application->GetData()->GetConfigMap()["customCommand"];
+                cmd = QString::fromStdString(saved);
+            }
+            if (cmd.isEmpty())
+                return;
 
-        QDir::setCurrent(newDir);
+            const QString oldDir = QDir::currentPath();
+            const QString newDir = QString::fromStdString(_application->GetData()->GetConfigMap()["wpath"]);
+
+            QDir::setCurrent(newDir);
 #ifdef Q_OS_WIN
-        int exitCode = QProcess::execute("cmd", {"/C", cmd});
+            int exitCode = QProcess::execute("cmd", {"/C", cmd});
 #else
-            int exitCode = QProcess::execute("/bin/sh", {"-c", cmd});
+                int exitCode = QProcess::execute("/bin/sh", {"-c", cmd});
 #endif
-        QDir::setCurrent(oldDir);
+            QDir::setCurrent(oldDir);
 
-        Q_UNUSED(exitCode);
-    });
+            Q_UNUSED(exitCode);
+        });
+    }
 
     row->setFocusProxy(btn);
 

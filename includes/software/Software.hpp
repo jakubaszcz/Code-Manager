@@ -26,7 +26,6 @@ class WorkflowGraphic;
 
 class Software {
 public:
-
     struct WindowSize {
         int width;
         int height;
@@ -45,6 +44,6 @@ private:
 
     // Application with everything I need
     std::shared_ptr<Application> _application;
-    WindowSize _windowSize{600, 400};
+    WindowSize _windowSize{1200, 800};
     //
 };

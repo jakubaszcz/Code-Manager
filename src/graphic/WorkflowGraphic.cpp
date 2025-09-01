@@ -26,3 +26,11 @@ void WorkflowGraphic::Draw(QVBoxLayout *layout) {
     // Draw Body
     DrawBody(layout);
 }
+
+Tab WorkflowGraphic::GetTab() {
+    return _tab;
+}
+
+void WorkflowGraphic::SetTab(Tab tab) {
+    _tab = tab;
+}

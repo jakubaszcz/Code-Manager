@@ -30,10 +30,6 @@ void WorkflowGraphic::DrawHeader(QVBoxLayout *layout) {
         )");
 
     auto *tab = new QShortcut(QKeySequence(Qt::Key_Tab), header);
-    QObject::connect(tab, &QShortcut::activated, header, [headerBox]() {
-        if (headerBox->isEnabled() && headerBox->isVisible())
-            headerBox->click();
-    });
 
 
     QHBoxLayout *headerLayout = new QHBoxLayout(headerBox);
@@ -47,13 +43,22 @@ void WorkflowGraphic::DrawHeader(QVBoxLayout *layout) {
             wpath.empty() ? "No working directory provided. Click here to choose one." : QString::fromStdString(wpath);
     QLabel *labelDirectory = new QLabel(text);
 
-    QObject::connect(headerBox, &QPushButton::clicked, [=]() {
-        QString dir = QFileDialog::getExistingDirectory(header, "Pick a working directory.");
-        if (!dir.isEmpty()) {
-            _application->GetData()->ChangeConfig("wpath", dir.toStdString());
-            labelDirectory->setText(dir);
-        }
-    });
+    // Event
+    {
+
+        QObject::connect(tab, &QShortcut::activated, header, [headerBox]() {
+            if (headerBox->isEnabled() && headerBox->isVisible())
+                headerBox->click();
+        });
+
+        QObject::connect(headerBox, &QPushButton::clicked, [=]() {
+            QString dir = QFileDialog::getExistingDirectory(header, "Pick a working directory.");
+            if (!dir.isEmpty()) {
+                _application->GetData()->ChangeConfig("wpath", dir.toStdString());
+                labelDirectory->setText(dir);
+            }
+        });
+    }
 
     headerLayout->addStretch();
     headerLayout->addWidget(labelIcon);

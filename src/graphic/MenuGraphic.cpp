@@ -18,32 +18,12 @@ void MenuGraphic::Draw(QVBoxLayout *layout) {
     _buttons.clear();
     _currentButton = 0;
 
-    _buttons.push_back(WorkflowButton());
-    _buttons.push_back(SettingButton());
-    _buttons.push_back(ExitButton());
-
-
-    auto *right = new QShortcut(QKeySequence(Qt::Key_Right), layout);
-    auto *left = new QShortcut(QKeySequence(Qt::Key_Left), layout);
-
-    QObject::connect(left, &QShortcut::activated, layout, [this]() {
-        if (_buttons.empty())
-            return;
-        if (_currentButton == 0)
-            _currentButton = static_cast<int>(_buttons.size());
-        _currentButton = (_currentButton - 1 + static_cast<int>(_buttons.size())) % static_cast<int>(_buttons.size());
-        _buttons[_currentButton]->setFocus(Qt::ShortcutFocusReason);
-    });
-
-    QObject::connect(right, &QShortcut::activated, layout, [this]() {
-        if (_buttons.empty())
-            return;
-        if (_currentButton == 0)
-            _currentButton = 0;
-        else
-            _currentButton = (_currentButton + 1) % static_cast<int>(_buttons.size());
-        _buttons[_currentButton]->setFocus(Qt::ShortcutFocusReason);
-    });
+    if (QPushButton *pb = WorkflowButton())
+        _buttons.push_back(pb);
+    if (QPushButton *pb = SettingButton())
+        _buttons.push_back(pb);
+    if (QPushButton *pb = ExitButton())
+        _buttons.push_back(pb);
 
     QVBoxLayout *centerColumn = new QVBoxLayout();
     centerColumn->setAlignment(Qt::AlignCenter);
@@ -87,11 +67,16 @@ QPushButton *MenuGraphic::WorkflowButton() {
                                   "  background:#3a3a3a;"
                                   "  outline: none;"
                                   "}");
-    QObject::connect(workflowButton, &QPushButton::clicked, workflowButton, [this]() {
-        _application->SetCurrentWindow(Windows::Workflow);
-        if (_redraw)
-            _redraw();
-    });
+
+    // Event
+    {
+
+        QObject::connect(workflowButton, &QPushButton::clicked, workflowButton, [this]() {
+            _application->SetCurrentWindow(Windows::Workflow);
+            if (_redraw)
+                _redraw();
+        });
+    }
     return workflowButton;
 }
 
@@ -118,11 +103,16 @@ QPushButton *MenuGraphic::SettingButton() {
                                  "  background:#3a3a3a;"
                                  "  outline: none;"
                                  "}");
-    QObject::connect(settingButton, &QPushButton::clicked, settingButton, [this]() {
-        _application->SetCurrentWindow(Windows::Setting);
-        if (_redraw)
-            _redraw();
-    });
+
+    // Event
+    {
+
+        QObject::connect(settingButton, &QPushButton::clicked, settingButton, [this]() {
+            _application->SetCurrentWindow(Windows::Setting);
+            if (_redraw)
+                _redraw();
+        });
+    }
     return settingButton;
 }
 
@@ -149,6 +139,11 @@ QPushButton *MenuGraphic::ExitButton() {
                               "  background:#3a3a3a;"
                               "  outline: none;"
                               "}");
-    QObject::connect(exitButton, &QPushButton::clicked, exitButton, [this]() { QApplication::quit(); });
+
+    // Event
+    {
+
+        QObject::connect(exitButton, &QPushButton::clicked, exitButton, [this]() { QApplication::quit(); });
+    }
     return exitButton;
 }
