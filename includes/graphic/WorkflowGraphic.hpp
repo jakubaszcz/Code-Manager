@@ -62,5 +62,5 @@ private:
     Tab _tab{Tab::Workflow};
     int _currentRow{0};
 
-    QVBoxLayout *_layout{nullptr};   // Layout du body (change à chaque onglet)
+    QVBoxLayout *_layout{nullptr}; // Layout du body (change à chaque onglet)
 };

@@ -1,4 +1,3 @@
-#include "../../../../includes/graphic/WorkflowGraphic.hpp"
 #include <QDesktopServices>
 #include <QHBoxLayout>
 #include <QLineEdit>
@@ -7,13 +6,14 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QWidget>
+#include "../../../../includes/graphic/WorkflowGraphic.hpp"
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
 void WorkflowGraphic::DrawWorkflowTab(QWidget *body) {
 
-    auto *layout = qobject_cast<QVBoxLayout*>(body->layout());
+    auto *layout = qobject_cast<QVBoxLayout *>(body->layout());
     if (!layout) {
         layout = new QVBoxLayout(body);
         layout->setContentsMargins(0, 0, 0, 0);

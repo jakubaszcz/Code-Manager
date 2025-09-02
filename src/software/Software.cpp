@@ -1,6 +1,6 @@
 #include "../../includes/software/Software.hpp"
-#include <memory>
 #include <QShortcut>
+#include <memory>
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -33,7 +33,8 @@ void Software::Draw() {
                     _application->SetCurrentWindow(Windows::Menu);
                     Draw();
                     break;
-                default: break;
+                default:
+                    break;
             }
         });
 
@@ -42,10 +43,11 @@ void Software::Draw() {
         mLayout->setSpacing(0);
     }
 
-    auto *mLayout = qobject_cast<QVBoxLayout*>(window->layout());
+    auto *mLayout = qobject_cast<QVBoxLayout *>(window->layout());
     QLayoutItem *child;
     while ((child = mLayout->takeAt(0)) != nullptr) {
-        if (child->widget()) child->widget()->deleteLater();
+        if (child->widget())
+            child->widget()->deleteLater();
         delete child;
     }
 
@@ -57,12 +59,14 @@ void Software::Draw() {
             _menuGraphic->Draw(bWidgetLayout);
             break;
         }
-        case Windows::Setting: break;
+        case Windows::Setting:
+            break;
         case Windows::Workflow: {
             _workflowGraphic->Draw(bWidgetLayout);
             break;
         }
-        default: break;
+        default:
+            break;
     }
     mLayout->addWidget(bWidget);
     window->show();

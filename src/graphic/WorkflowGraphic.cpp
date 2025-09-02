@@ -53,7 +53,8 @@ void WorkflowGraphic::RebuildBody() {
 
     while (_layout->count() > 0) {
         QLayoutItem *item = _layout->takeAt(0);
-        if (!item) continue;
+        if (!item)
+            continue;
 
         if (QWidget *w = item->widget()) {
             w->deleteLater();
@@ -71,7 +72,7 @@ void WorkflowGraphic::RebuildBody() {
         delete item;
     }
 
-    for (QWidget *child : body->findChildren<QWidget*>(QString(), Qt::FindDirectChildrenOnly)) {
+    for (QWidget *child: body->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly)) {
         child->deleteLater();
     }
 
@@ -86,5 +87,4 @@ void WorkflowGraphic::RebuildBody() {
     if (it != _tabsWindow.end()) {
         it->second();
     }
-
 }

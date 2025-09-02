@@ -5,8 +5,8 @@
 
 
 void WorkflowGraphic::DrawApplicationTab(QWidget *body) {
-    auto *layout = qobject_cast<QVBoxLayout*>(body->layout());
-    QLabel *label = new QLabel("Codfj");
+    auto *layout = qobject_cast<QVBoxLayout *>(body->layout());
+    QLabel *label = new QLabel("Still in development");
     label->setAlignment(Qt::AlignCenter);
     label->setStyleSheet("QLabel { color: white; font-size: 16px; font-weight: bold; }");
     layout->addWidget(label);

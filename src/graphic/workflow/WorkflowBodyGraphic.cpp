@@ -21,11 +21,9 @@ void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
         layout->addWidget(body);
     }
 
-    _tabsWindow = {
-        { Tab::Workflow,    [this]() { this->DrawWorkflowTab(_layout->parentWidget()); } },
-        { Tab::Command,     [this]() { this->DrawCommandTab(_layout->parentWidget()); } },
-        { Tab::Application, [this]() { this->DrawApplicationTab(_layout->parentWidget()); } }
-    };
+    _tabsWindow = {{Tab::Workflow, [this]() { this->DrawWorkflowTab(_layout->parentWidget()); }},
+                   {Tab::Command, [this]() { this->DrawCommandTab(_layout->parentWidget()); }},
+                   {Tab::Application, [this]() { this->DrawApplicationTab(_layout->parentWidget()); }}};
 
     RebuildBody();
 }
@@ -34,15 +32,13 @@ void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-
 void WorkflowGraphic::DrawTabs(QWidget *body) {
-    auto *layout = qobject_cast<QVBoxLayout*>(body->layout());
+    auto *layout = qobject_cast<QVBoxLayout *>(body->layout());
 
     std::vector<std::pair<std::string, std::function<void()>>> buttonsEvent = {
-        {"Workflow",    [this]() { SetTab(Tab::Workflow); }},
-        {"Command",     [this]() { SetTab(Tab::Command); }},
-        {"Application", [this]() { SetTab(Tab::Application); }}
-    };
+            {"Workflow", [this]() { SetTab(Tab::Workflow); }},
+            {"Command", [this]() { SetTab(Tab::Command); }},
+            {"Application", [this]() { SetTab(Tab::Application); }}};
 
     QWidget *tabsWidget = new QWidget;
     auto *h = new QHBoxLayout(tabsWidget);
