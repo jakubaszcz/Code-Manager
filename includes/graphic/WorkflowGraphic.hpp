@@ -44,17 +44,23 @@ private:
 
     void DrawBody(QVBoxLayout *);
 
-    void DrawTabs(QVBoxLayout *);
-    QWidget *DrawWorkflowTab();
-    QWidget *DrawCommandTab();
-    QWidget *DrawApplicationTab();
+    void DrawTabs(QWidget *);
+    void DrawWorkflowTab(QWidget *);
+    void DrawCommandTab(QWidget *);
+    void DrawApplicationTab(QWidget *);
     QPushButton *Tabs(const std::string&, std::function<void()>);
 
     QWidget *FileManagerRow();
     QWidget *CommandRow();
     QWidget *TerminalRow();
 
-    std::vector<QWidget *> _rows;
+    // Reconstruit complètement le layout du body et met à jour _layout
+    void RebuildBody();
+
+    std::vector<QWidget *> _rowsWorkflowTab;
+    std::unordered_map<Tab, std::function<void()>> _tabsWindow;
     Tab _tab{Tab::Workflow};
     int _currentRow{0};
+
+    QVBoxLayout *_layout{nullptr};   // Layout du body (change à chaque onglet)
 };

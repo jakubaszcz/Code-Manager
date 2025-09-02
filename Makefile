@@ -6,6 +6,9 @@ SRC =	Main.cpp	\
         src/graphic/WorkflowGraphic.cpp	\
         src/graphic/workflow/WorkflowHeaderGraphic.cpp	\
         src/graphic/workflow/WorkflowBodyGraphic.cpp	\
+        src/graphic/workflow/tabs/WorkflowBodyWorkflowTabGraphic.cpp	\
+        src/graphic/workflow/tabs/WorkflowBodyCommandTabGraphic.cpp	\
+        src/graphic/workflow/tabs/WorkflowBodyApplicationTabGraphic.cpp	\
         src/graphic/MenuGraphic.cpp
 NAME = CodeManager
 CC = g++
