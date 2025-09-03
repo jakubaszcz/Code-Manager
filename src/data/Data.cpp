@@ -113,11 +113,29 @@ void Data::ChangeConfig(const std::string& key, const std::string& value) {
         lines.push_back(key + "=" + value);
     }
 
-    // Réécrit tout le fichier
     std::ofstream outfile("config.cfg", std::ios::trunc);
     for (const auto& l: lines) {
         outfile << l << "\n";
     }
 
     _configMap[key] = value;
+}
+
+
+void Data::AddCommand() {
+    const auto& cfg = GetConfigMap();
+    int nextIndex = 1;
+
+    for (const auto& [key, value] : cfg) {
+        if (key.rfind("cs#", 0) == 0) {  // vérifie que key commence par "cs#"
+            const std::string num = key.substr(3);
+            try {
+                int idx = std::stoi(num);
+                nextIndex = std::max(nextIndex, idx + 1);
+            } catch (const Error& e) {
+                std::cerr << e.what() << std::endl;
+            }
+        }
+    }
+    ChangeConfig("cs#" + std::to_string(nextIndex), "");
 }

@@ -24,6 +24,7 @@ public:
     void LoadConfig();
 
     void ChangeConfig(const std::string&, const std::string&);
+    void AddCommand();
 
     std::unordered_map<std::string, std::string> GetConfigMap() const;
 
