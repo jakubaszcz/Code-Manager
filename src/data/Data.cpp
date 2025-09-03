@@ -139,3 +139,24 @@ void Data::AddCommand() {
     }
     ChangeConfig("cs#" + std::to_string(nextIndex), "");
 }
+
+
+void Data::RemoveCommand(const std::string& key) {
+    std::ifstream infile("config.cfg");
+    std::vector<std::string> lines;
+    std::string line;
+
+    while (std::getline(infile, line)) {
+        if (line.find(key) == std::string::npos) {
+            lines.push_back(line);
+        }
+    }
+    infile.close();
+
+    std::ofstream outfile("config.cfg", std::ios::trunc);
+    for (const auto& l : lines) {
+        outfile << l << "\n";
+    }
+
+    GetConfigMap().erase(key);
+}
