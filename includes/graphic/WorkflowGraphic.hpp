@@ -40,22 +40,22 @@ public:
     Tab GetTab();
 
 private:
+    void RebuildBody();
     void DrawHeader(QVBoxLayout *);
-
     void DrawBody(QVBoxLayout *);
 
     void DrawTabs(QWidget *);
-    void DrawWorkflowTab(QWidget *);
-    void DrawCommandTab(QWidget *);
-    void DrawApplicationTab(QWidget *);
     QPushButton *Tabs(const std::string&, std::function<void()>);
 
+    void DrawWorkflowTab(QWidget *);
     QWidget *FileManagerRow();
-    QWidget *CommandRow();
     QWidget *TerminalRow();
 
-    // Reconstruit complètement le layout du body et met à jour _layout
-    void RebuildBody();
+    void DrawCommandTab(QWidget *);
+    void AddCommand(QWidget *);
+    QWidget *Command(const std::string&);
+
+    void DrawApplicationTab(QWidget *);
 
     std::vector<QWidget *> _rowsWorkflowTab;
     std::unordered_map<Tab, std::function<void()>> _tabsWindow;

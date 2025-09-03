@@ -1,5 +1,6 @@
 #include "../../../../includes/graphic/WorkflowGraphic.hpp"
-
+#include <iostream>
+#include <string>
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -17,10 +18,16 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
     boxLayout->setContentsMargins(0, 0, 0, 0);
     boxLayout->setSpacing(0);
 
-    if (QWidget *w = CommandRow())
-        boxLayout->addWidget(w);
+    const auto& cfg = _application->GetData()->GetConfigMap();
+    for (const auto& [key, value]: cfg) {
+        if (key.rfind("cs#", 0) == 0) {
+            if (QWidget *w = Command(key))
+                boxLayout->addWidget(w, 0, Qt::AlignTop);
+        }
+    }
 
     boxLayout->addStretch();
+    AddCommand(box);
 
     layout->addWidget(box);
 }
@@ -29,7 +36,22 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QWidget *WorkflowGraphic::CommandRow() {
+void WorkflowGraphic::AddCommand(QWidget *layout) {
+    QPushButton *brn = new QPushButton("Add Command", layout);
+    brn->setCursor(Qt::PointingHandCursor);
+
+    QObject::connect(brn, &QPushButton::clicked, layout, [this]() {
+        _application->GetData()->AddCommand();
+        RebuildBody();
+    });
+
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+QWidget *WorkflowGraphic::Command(const std::string& id) {
     QWidget *row = new QWidget;
     row->setFocusPolicy(Qt::StrongFocus);
     row->setStyleSheet("QWidget { background-color: #2a2a2a; }");
@@ -52,7 +74,7 @@ QWidget *WorkflowGraphic::CommandRow() {
     auto *input = new QLineEdit(row);
     {
         const auto cfg = _application->GetData()->GetConfigMap();
-        const auto it = cfg.find("customCommand");
+        const auto it = cfg.find(id);
         const std::string customCmd = (it != cfg.end()) ? it->second : std::string();
         input->setPlaceholderText(QString::fromStdString(customCmd.empty() ? "Enter custom command." : customCmd));
     }
@@ -64,20 +86,20 @@ QWidget *WorkflowGraphic::CommandRow() {
     h->addWidget(btn, 1);
     h->addWidget(input, 0, Qt::AlignRight);
 
-    QObject::connect(input, &QLineEdit::returnPressed, row, [this, input]() {
+    QObject::connect(input, &QLineEdit::returnPressed, row, [this, input, id]() {
         const QString cmd = input->text().trimmed();
         if (cmd.isEmpty())
             return;
-        _application->GetData()->ChangeConfig("customCommand", input->text().toStdString());
+        _application->GetData()->ChangeConfig(id, input->text().toStdString());
         input->setPlaceholderText(cmd);
         input->clear();
     });
 
-    QObject::connect(btn, &QPushButton::clicked, row, [this, input]() {
+    QObject::connect(btn, &QPushButton::clicked, row, [this, input, id]() {
         QString cmd = input->text().trimmed();
         if (cmd.isEmpty()) {
             const auto cfg = _application->GetData()->GetConfigMap();
-            const auto it = cfg.find("customCommand");
+            const auto it = cfg.find(id);
             if (it != cfg.end())
                 cmd = QString::fromStdString(it->second);
         }
