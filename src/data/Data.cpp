@@ -59,6 +59,9 @@ void Data::LoadConfig() {
         return;
     }
 
+    _configMap.clear();
+
+
     std::string line;
     while (std::getline(file, line)) {
         auto pos = line.find('=');
@@ -122,6 +125,9 @@ void Data::ChangeConfig(const std::string& key, const std::string& value) {
 }
 
 
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 void Data::AddCommand() {
     const auto& cfg = GetConfigMap();
     int nextIndex = 1;
@@ -141,6 +147,9 @@ void Data::AddCommand() {
 }
 
 
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 void Data::RemoveCommand(const std::string& key) {
     std::ifstream infile("config.cfg");
     std::vector<std::string> lines;
@@ -158,5 +167,5 @@ void Data::RemoveCommand(const std::string& key) {
         outfile << l << "\n";
     }
 
-    GetConfigMap().erase(key);
+    _configMap.erase(key);
 }
