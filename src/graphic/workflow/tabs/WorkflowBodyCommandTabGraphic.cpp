@@ -23,6 +23,26 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
     scroll->setWidgetResizable(true);
     scroll->setFrameShape(QFrame::NoFrame);
     scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+
+    scroll->setStyleSheet(R"(
+        QScrollBar:vertical {
+            border: none;
+            background: #1e1e1e;
+            width: 12px;
+            margin: 0px;
+        }
+        QScrollBar::handle:vertical {
+            background: #343434;
+            min-height: 20px;
+        }
+        QScrollBar::handle:vertical:hover {
+            background: #1b1b1b;
+        }
+        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+            height: 0px;
+        }
+    )");
+
     layout->addWidget(scroll);
 
     QWidget *bbox = new QWidget(scroll);
