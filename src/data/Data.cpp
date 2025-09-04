@@ -1,6 +1,6 @@
 #include "../../includes/data/Data.hpp"
 #include "../../includes/error/Error.hpp"
-
+#include <set>
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -130,21 +130,27 @@ void Data::ChangeConfig(const std::string& key, const std::string& value) {
 
 void Data::AddCommand() {
     const auto& cfg = GetConfigMap();
-    int nextIndex = 1;
 
+    std::set<int> indices;
     for (const auto& [key, value] : cfg) {
-        if (key.rfind("cs#", 0) == 0) {  // vérifie que key commence par "cs#"
-            const std::string num = key.substr(3);
+        if (key.rfind("cs#", 0) == 0) {
             try {
-                int idx = std::stoi(num);
-                nextIndex = std::max(nextIndex, idx + 1);
-            } catch (const Error& e) {
-                std::cerr << e.what() << std::endl;
+                int idx = std::stoi(key.substr(3));
+                indices.insert(idx);
+            } catch (const std::exception& e) {
+                std::cerr << "Invalid key: " << key << " (" << e.what() << ")\n";
             }
         }
     }
+
+    int nextIndex = 1;
+    while (indices.count(nextIndex)) {
+        ++nextIndex;
+    }
+
     ChangeConfig("cs#" + std::to_string(nextIndex), "");
 }
+
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
