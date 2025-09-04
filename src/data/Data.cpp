@@ -6,6 +6,13 @@
 
 
 Data::Data() {
+    _customConfigMap.clear();
+    _configMap.clear();
+
+    _customConfigMap = {
+        {ConfigType::Command, "cc#"},
+        {ConfigType::Application, "ca#"},
+    };
 }
 
 
@@ -85,6 +92,14 @@ std::unordered_map<std::string, std::string> Data::GetConfigMap() const {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
+std::unordered_map<Data::ConfigType, std::string> Data::GetCustomConfigMap() const {
+    return _customConfigMap;
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 void Data::ChangeConfig(const std::string& key, const std::string& value) {
     std::ifstream infile("config.cfg");
     std::vector<std::string> lines;
@@ -133,7 +148,7 @@ void Data::AddCommand() {
 
     std::set<int> indices;
     for (const auto& [key, value] : cfg) {
-        if (key.rfind("cs#", 0) == 0) {
+        if (key.rfind(_customConfigMap[ConfigType::Command], 0) == 0) {
             try {
                 int idx = std::stoi(key.substr(3));
                 indices.insert(idx);
@@ -148,7 +163,7 @@ void Data::AddCommand() {
         ++nextIndex;
     }
 
-    ChangeConfig("cs#" + std::to_string(nextIndex), "");
+    ChangeConfig(_customConfigMap[ConfigType::Command] + std::to_string(nextIndex), "");
 }
 
 
@@ -157,6 +172,57 @@ void Data::AddCommand() {
 
 
 void Data::RemoveCommand(const std::string& key) {
+    std::ifstream infile("config.cfg");
+    std::vector<std::string> lines;
+    std::string line;
+
+    while (std::getline(infile, line)) {
+        if (line.find(key) == std::string::npos) {
+            lines.push_back(line);
+        }
+    }
+    infile.close();
+
+    std::ofstream outfile("config.cfg", std::ios::trunc);
+    for (const auto& l : lines) {
+        outfile << l << "\n";
+    }
+
+    _configMap.erase(key);
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+void Data::AddApplication() {
+    const auto& cfg = GetConfigMap();
+
+    std::set<int> indices;
+    for (const auto& [key, value] : cfg) {
+        if (key.rfind(_customConfigMap[ConfigType::Application], 0) == 0) {
+            try {
+                int idx = std::stoi(key.substr(3));
+                indices.insert(idx);
+            } catch (const std::exception& e) {
+                std::cerr << "Invalid key: " << key << " (" << e.what() << ")\n";
+            }
+        }
+    }
+
+    int nextIndex = 1;
+    while (indices.count(nextIndex)) {
+        ++nextIndex;
+    }
+
+    ChangeConfig(_customConfigMap[ConfigType::Application] + std::to_string(nextIndex), "");
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+void Data::RemoveApplication(const std::string& key) {
     std::ifstream infile("config.cfg");
     std::vector<std::string> lines;
     std::string line;

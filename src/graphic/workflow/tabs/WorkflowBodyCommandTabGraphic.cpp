@@ -52,7 +52,7 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 
     const auto& cfg = _application->GetData()->GetConfigMap();
     for (const auto& [key, value] : cfg) {
-        if (key.rfind("cs#", 0) == 0) {
+        if (key.rfind(_application->GetData()->GetCustomConfigMap()[Data::ConfigType::Command], 0) == 0) {
             if (QWidget *w = Command(key)) {
                 boxLayout->addWidget(w, 0, Qt::AlignTop);
             }

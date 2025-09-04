@@ -20,6 +20,8 @@ WorkflowGraphic::WorkflowGraphic(std::shared_ptr<Application> application) : IGr
 
 
 void WorkflowGraphic::Draw(QVBoxLayout *layout) {
+
+
     // Draw Header
     DrawHeader(layout);
 
@@ -48,9 +50,16 @@ void WorkflowGraphic::RebuildBody() {
         return;
 
     QWidget *body = _layout->parentWidget();
-    if (!body)
+    if (!body) {
+        _layout = nullptr;  // Clear the invalid layout pointer
         return;
+    }
 
+    // Additional safety check before operating on layout
+    if (_layout == nullptr) {
+        return;
+    }
+    
     while (_layout->count() > 0) {
         QLayoutItem *item = _layout->takeAt(0);
         if (!item)
@@ -76,7 +85,10 @@ void WorkflowGraphic::RebuildBody() {
         child->deleteLater();
     }
 
-    delete _layout;
+    // Safe deletion of layout
+    if (_layout) {
+        delete _layout;
+    }
     _layout = new QVBoxLayout(body);
     _layout->setContentsMargins(0, 0, 0, 0);
     _layout->setSpacing(0);

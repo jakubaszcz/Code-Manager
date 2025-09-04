@@ -21,9 +21,21 @@ void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
         layout->addWidget(body);
     }
 
-    _tabsWindow = {{Tab::Workflow, [this]() { this->DrawWorkflowTab(_layout->parentWidget()); }},
-                   {Tab::Command, [this]() { this->DrawCommandTab(_layout->parentWidget()); }},
-                   {Tab::Application, [this]() { this->DrawApplicationTab(_layout->parentWidget()); }}};
+    _tabsWindow = {{Tab::Workflow, [this]() { 
+                        if (_layout && _layout->parentWidget()) {
+                            this->DrawWorkflowTab(_layout->parentWidget()); 
+                        }
+                    }},
+                   {Tab::Command, [this]() { 
+                        if (_layout && _layout->parentWidget()) {
+                            this->DrawCommandTab(_layout->parentWidget()); 
+                        }
+                    }},
+                   {Tab::Application, [this]() { 
+                        if (_layout && _layout->parentWidget()) {
+                            this->DrawApplicationTab(_layout->parentWidget()); 
+                        }
+                    }}};
 
     RebuildBody();
 }
