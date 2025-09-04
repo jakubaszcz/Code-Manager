@@ -56,6 +56,8 @@ private:
     QWidget *Command(const std::string&);
 
     void DrawApplicationTab(QWidget *);
+    void AddApplication(QWidget *);
+
 
     std::vector<QWidget *> _rowsWorkflowTab;
     std::unordered_map<Tab, std::function<void()>> _tabsWindow;
