@@ -143,7 +143,7 @@ void Data::ChangeConfig(const std::string& key, const std::string& value) {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-void Data::AddCommand() {
+void Data::AddCommand(const std::string& data) {
     const auto& cfg = GetConfigMap();
 
     std::set<int> indices;
@@ -163,7 +163,7 @@ void Data::AddCommand() {
         ++nextIndex;
     }
 
-    ChangeConfig(_customConfigMap[ConfigType::Command] + std::to_string(nextIndex), "");
+    ChangeConfig(_customConfigMap[ConfigType::Command] + std::to_string(nextIndex), data);
 }
 
 

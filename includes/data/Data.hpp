@@ -31,7 +31,7 @@ public:
 
     void ChangeConfig(const std::string&, const std::string&);
 
-    void AddCommand();
+    void AddCommand(const std::string&);
     void RemoveCommand(const std::string&);
 
     void AddApplication();

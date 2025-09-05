@@ -94,11 +94,13 @@ void WorkflowGraphic::AddCommand(QWidget *container) {
     );
     h->addWidget(btnPlus, 0, Qt::AlignRight);
 
-    auto addAndRefresh = [container, btnPlus /*, this*/ ]() {
+    auto addAndRefresh = [container, this
+                          /*, this*/ ]() {
         NamePopup popup(container);    // parent QWidget*
         popup.OpenNear(container);       // ancre : le bouton +
-        // _application->GetData()->AddCommand();
-        // RebuildBody();
+
+        _application->GetData()->AddCommand(popup.GetName());
+        RebuildBody();
     };
 
     QObject::connect(btnPlus, &QPushButton::clicked, row, addAndRefresh);
