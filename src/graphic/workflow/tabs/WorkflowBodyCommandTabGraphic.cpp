@@ -1,8 +1,8 @@
-#include "../../../../includes/graphic/WorkflowGraphic.hpp"
-#include "../../../../includes/graphic/utils/popup/NamePopup.hpp"
+#include <QScrollArea>
 #include <iostream>
 #include <string>
-#include <QScrollArea>
+#include "../../../../includes/graphic/WorkflowGraphic.hpp"
+#include "../../../../includes/graphic/utils/popup/NamePopup.hpp"
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -52,7 +52,7 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
     boxLayout->setSpacing(0);
 
     const auto& cfg = _application->GetData()->GetConfigMap();
-    for (const auto& [key, value] : cfg) {
+    for (const auto& [key, value]: cfg) {
         if (key.rfind(_application->GetData()->GetCustomConfigMap()[Data::ConfigType::Command], 0) == 0) {
             if (QWidget *w = Command(key)) {
                 boxLayout->addWidget(w, 0, Qt::AlignTop);
@@ -64,7 +64,6 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 
     scroll->setWidget(bbox);
 }
-
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -87,17 +86,16 @@ void WorkflowGraphic::AddCommand(QWidget *container) {
     btnPlus->setCursor(Qt::PointingHandCursor);
     btnPlus->setFixedSize(32, 32);
     btnPlus->setStyleSheet(
-        "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
-        "QPushButton:hover { background-color: #2a2a2a; }"
-        "QPushButton:pressed { background-color: #171717; }"
-        "QPushButton:focus { border: 1px solid #5a5a5a; }"
-    );
+            "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
+            "QPushButton:hover { background-color: #2a2a2a; }"
+            "QPushButton:pressed { background-color: #171717; }"
+            "QPushButton:focus { border: 1px solid #5a5a5a; }");
     h->addWidget(btnPlus, 0, Qt::AlignRight);
 
     auto addAndRefresh = [container, this
-                          /*, this*/ ]() {
-        NamePopup popup(container);    // parent QWidget*
-        popup.OpenNear(container);       // ancre : le bouton +
+                          /*, this*/]() {
+        NamePopup popup(container); // parent QWidget*
+        popup.OpenNear(container); // ancre : le bouton +
 
         _application->GetData()->AddCommand(popup.GetName());
         RebuildBody();
@@ -149,11 +147,10 @@ QWidget *WorkflowGraphic::Command(const std::string& id) {
     btnRemove->setFixedSize(32, 32);
     btnRemove->setToolTip("Remove this command");
     btnRemove->setStyleSheet(
-        "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
-        "QPushButton:hover { background-color: #2a2a2a; }"
-        "QPushButton:pressed { background-color: #171717; }"
-        "QPushButton:focus { border: 1px solid #5a5a5a; }"
-    );
+            "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
+            "QPushButton:hover { background-color: #2a2a2a; }"
+            "QPushButton:pressed { background-color: #171717; }"
+            "QPushButton:focus { border: 1px solid #5a5a5a; }");
 
     h->addWidget(btn, 1);
     h->addWidget(input, 0, Qt::AlignRight);

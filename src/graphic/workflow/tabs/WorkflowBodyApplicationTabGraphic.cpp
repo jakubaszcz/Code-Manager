@@ -1,6 +1,6 @@
-#include "../../../../includes/graphic/WorkflowGraphic.hpp"
-#include <string>
 #include <QScrollArea>
+#include <string>
+#include "../../../../includes/graphic/WorkflowGraphic.hpp"
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -84,16 +84,14 @@ void WorkflowGraphic::AddApplication(QWidget *container) {
     btnPlus->setCursor(Qt::PointingHandCursor);
     btnPlus->setFixedSize(32, 32);
     btnPlus->setStyleSheet(
-        "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
-        "QPushButton:hover { background-color: #2a2a2a; }"
-        "QPushButton:pressed { background-color: #171717; }"
-        "QPushButton:focus { border: 1px solid #5a5a5a; }"
-    );
+            "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
+            "QPushButton:hover { background-color: #2a2a2a; }"
+            "QPushButton:pressed { background-color: #171717; }"
+            "QPushButton:focus { border: 1px solid #5a5a5a; }");
 
     h->addWidget(btnPlus, 0, Qt::AlignRight);
 
     auto addAndRefresh = [this]() {
-
         _application->GetData()->AddApplication();
         RebuildBody();
     };
@@ -106,7 +104,6 @@ void WorkflowGraphic::AddApplication(QWidget *container) {
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
-
 
 
 QWidget *WorkflowGraphic::ApplicationButton(const std::string& id) {
@@ -146,11 +143,10 @@ QWidget *WorkflowGraphic::ApplicationButton(const std::string& id) {
     btnRemove->setFixedSize(32, 32);
     btnRemove->setToolTip("Remove this command");
     btnRemove->setStyleSheet(
-        "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
-        "QPushButton:hover { background-color: #2a2a2a; }"
-        "QPushButton:pressed { background-color: #171717; }"
-        "QPushButton:focus { border: 1px solid #5a5a5a; }"
-    );
+            "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
+            "QPushButton:hover { background-color: #2a2a2a; }"
+            "QPushButton:pressed { background-color: #171717; }"
+            "QPushButton:focus { border: 1px solid #5a5a5a; }");
 
     h->addWidget(btn, 1);
     h->addWidget(input, 0, Qt::AlignRight);

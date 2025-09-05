@@ -14,10 +14,8 @@ IPopup::IPopup(QWidget *parent) : QDialog(parent) {
 
 
 void IPopup::DrawStyling() {
-    setStyleSheet(
-        "QDialog { background: white; border-radius: 8px; }"
-        "* { font-size: 14px; }"
-    );
+    setStyleSheet("QDialog { background: white; border-radius: 8px; }"
+                  "* { font-size: 14px; }");
 }
 
 
@@ -40,12 +38,15 @@ void IPopup::MakeAutoClose() {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-void IPopup::OpenNear(QWidget* anchor, const QPoint& offset, bool modal) {
+void IPopup::OpenNear(QWidget *anchor, const QPoint& offset, bool modal) {
     if (layout() == nullptr) {
         Draw();
         DrawStyling();
     }
     const QPoint global = anchor->mapToGlobal(QPoint(0, anchor->height())) + offset;
     move(global);
-    if (modal) exec(); else show();
+    if (modal)
+        exec();
+    else
+        show();
 }

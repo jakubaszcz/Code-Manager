@@ -8,7 +8,8 @@
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-NamePopup::NamePopup(QWidget *parent) : IPopup(parent) {}
+NamePopup::NamePopup(QWidget *parent) : IPopup(parent) {
+}
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -26,7 +27,7 @@ void NamePopup::Draw() {
                          "QLineEdit:focus { border: 1px solid #5a5a5a; }");
 
     {
-    QObject::connect(input, &QLineEdit::returnPressed, this, [this, input]() {
+        QObject::connect(input, &QLineEdit::returnPressed, this, [this, input]() {
             _name = input->text().toStdString();
             close();
         });
@@ -40,11 +41,8 @@ void NamePopup::Draw() {
 
 
 void NamePopup::DrawStyling() {
-    // Optional: specialize styling for NamePopup, or leave empty to use base defaults
-    setStyleSheet(
-        "QDialog { background: #222; border-radius: 8px; }"
-        "* { font-size: 14px; color: white; }"
-    );
+    setStyleSheet("QDialog { background: #222; border-radius: 8px; }"
+                  "* { font-size: 14px; color: white; }");
 }
 
 
@@ -52,5 +50,5 @@ void NamePopup::DrawStyling() {
 
 
 const std::string& NamePopup::GetName() const {
-return _name;
+    return _name;
 }

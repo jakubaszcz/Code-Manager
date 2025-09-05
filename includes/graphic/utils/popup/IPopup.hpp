@@ -6,26 +6,27 @@
 
 #include <QApplication>
 #include <QDialog>
-#include <QVBoxLayout>
-#include <QLabel>
 #include <QDialogButtonBox>
-#include <QPushButton>
+#include <QLabel>
 #include <QPoint>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
 class IPopup : public QDialog {
-    public:
-        ~IPopup() = default;
+public:
+    ~IPopup() = default;
 
-        void OpenNear(QWidget* anchor, const QPoint& offset = QPoint(0,0), bool modal = true);
-    protected:
-        explicit IPopup(QWidget *parent = nullptr);
+    void OpenNear(QWidget *anchor, const QPoint& offset = QPoint(0, 0), bool modal = true);
 
-        virtual void Draw() = 0;
-        virtual void DrawStyling();
+protected:
+    explicit IPopup(QWidget *parent = nullptr);
 
-        void MakeFrameless();
-        void MakeAutoClose();
+    virtual void Draw() = 0;
+    virtual void DrawStyling();
+
+    void MakeFrameless();
+    void MakeAutoClose();
 };
