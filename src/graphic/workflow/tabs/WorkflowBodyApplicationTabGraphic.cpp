@@ -48,14 +48,14 @@ void WorkflowGraphic::DrawApplicationTab(QWidget *body) {
     boxLayout->setContentsMargins(0, 0, 0, 0);
     boxLayout->setSpacing(0);
 
-    // const auto& cfg = _application->GetData()->GetConfigMap();
-    // for (const auto& [key, value]: cfg) {
-    //     if (key.rfind(_application->GetData()->GetCustomConfigMap()[Data::ConfigType::Command], 0) == 0) {
-    //         if (QWidget *w = Command(key)) {
-    //             boxLayout->addWidget(w, 0, Qt::AlignTop);
-    //         }
-    //     }
-    // }
+    const auto& cfg = _application->GetData()->GetConfigMap();
+    for (const auto& [key, value]: cfg) {
+        if (key.rfind(_application->GetData()->GetCustomConfigMap()[Data::ConfigType::Application], 0) == 0) {
+            if (QWidget *w = ApplicationButton(key)) {
+                boxLayout->addWidget(w, 0, Qt::AlignTop);
+            }
+        }
+    }
 
     boxLayout->addStretch();
 
@@ -102,4 +102,58 @@ void WorkflowGraphic::AddApplication(QWidget *container) {
 
 
     v->addWidget(row, 0, Qt::AlignTop);
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+
+QWidget *WorkflowGraphic::ApplicationButton(const std::string& id) {
+    auto *row = new QWidget;
+    row->setFocusPolicy(Qt::StrongFocus);
+    row->setStyleSheet("QWidget { background-color: #2a2a2a; }");
+
+    auto *h = new QHBoxLayout(row);
+    h->setContentsMargins(8, 8, 8, 8);
+    h->setSpacing(8);
+
+    auto *btn = new QPushButton("Run", row);
+    btn->setCursor(Qt::PointingHandCursor);
+    btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    btn->setMinimumWidth(0);
+    btn->setFlat(true);
+    btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #2a2a2a; "
+                       "color: white; }"
+                       "QPushButton:hover { background-color: #343434; }"
+                       "QPushButton:pressed { background-color: #1b1b1b; }"
+                       "QPushButton:focus { background-color: #343434; border: none; outline: none; }");
+
+    auto *input = new QLineEdit(row);
+    {
+        const auto cfg = _application->GetData()->GetConfigMap();
+        const auto it = cfg.find(id);
+        const std::string customCmd = (it != cfg.end()) ? it->second : std::string();
+        input->setPlaceholderText(QString::fromStdString(customCmd.empty() ? "Enter custom command." : customCmd));
+    }
+    input->setClearButtonEnabled(true);
+    input->setFixedWidth(240);
+    input->setStyleSheet("QLineEdit { background: #1e1e1e; color: white; border: 1px solid #3a3a3a; padding: 6px 8px; }"
+                         "QLineEdit:focus { border: 1px solid #5a5a5a; }");
+
+    auto *btnRemove = new QPushButton("-", row);
+    btnRemove->setCursor(Qt::PointingHandCursor);
+    btnRemove->setFixedSize(32, 32);
+    btnRemove->setToolTip("Remove this command");
+    btnRemove->setStyleSheet(
+        "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
+        "QPushButton:hover { background-color: #2a2a2a; }"
+        "QPushButton:pressed { background-color: #171717; }"
+        "QPushButton:focus { border: 1px solid #5a5a5a; }"
+    );
+
+    h->addWidget(btn, 1);
+    h->addWidget(input, 0, Qt::AlignRight);
+    h->addWidget(btnRemove, 0, Qt::AlignRight);
+    return row;
 }

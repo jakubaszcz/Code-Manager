@@ -1,4 +1,5 @@
 #include "../../../../includes/graphic/WorkflowGraphic.hpp"
+#include "../../../../includes/graphic/utils/popup/NamePopup.hpp"
 #include <iostream>
 #include <string>
 #include <QScrollArea>
@@ -70,7 +71,6 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 
 
 void WorkflowGraphic::AddCommand(QWidget *container) {
-
     auto *v = qobject_cast<QVBoxLayout *>(container->layout());
     if (!v) {
         v = new QVBoxLayout(container);
@@ -92,17 +92,16 @@ void WorkflowGraphic::AddCommand(QWidget *container) {
         "QPushButton:pressed { background-color: #171717; }"
         "QPushButton:focus { border: 1px solid #5a5a5a; }"
     );
-
     h->addWidget(btnPlus, 0, Qt::AlignRight);
 
-    auto addAndRefresh = [this]() {
-
-        _application->GetData()->AddCommand();
-        RebuildBody();
+    auto addAndRefresh = [container, btnPlus /*, this*/ ]() {
+        NamePopup popup(container);    // parent QWidget*
+        popup.OpenNear(container);       // ancre : le bouton +
+        // _application->GetData()->AddCommand();
+        // RebuildBody();
     };
 
     QObject::connect(btnPlus, &QPushButton::clicked, row, addAndRefresh);
-
 
     v->addWidget(row, 0, Qt::AlignTop);
 }

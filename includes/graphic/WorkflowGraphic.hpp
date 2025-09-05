@@ -57,6 +57,7 @@ private:
 
     void DrawApplicationTab(QWidget *);
     void AddApplication(QWidget *);
+    QWidget *ApplicationButton(const std::string&);
 
 
     std::vector<QWidget *> _rowsWorkflowTab;
