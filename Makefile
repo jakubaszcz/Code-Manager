@@ -9,7 +9,9 @@ SRC =	Main.cpp	\
         src/graphic/workflow/tabs/WorkflowBodyWorkflowTabGraphic.cpp	\
         src/graphic/workflow/tabs/WorkflowBodyCommandTabGraphic.cpp	\
         src/graphic/workflow/tabs/WorkflowBodyApplicationTabGraphic.cpp	\
-        src/graphic/MenuGraphic.cpp
+        src/graphic/MenuGraphic.cpp	\
+        src/graphic/popup/IPopup.cpp	\
+        src/graphic/popup/NamePopup.cpp
 NAME = CodeManager
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic -O2 `pkg-config --cflags Qt6Widgets` -fPIC
