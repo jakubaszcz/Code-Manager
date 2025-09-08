@@ -33,11 +33,12 @@ void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
                             this->DrawCommandTab(_layout->parentWidget());
                         }
                     }},
-                   {Tab::Application, [this]() {
-                        if (_layout && _layout->parentWidget()) {
-                            this->DrawApplicationTab(_layout->parentWidget());
-                        }
-                    }}};
+                   // {Tab::Application, [this]() {
+                   //      if (_layout && _layout->parentWidget()) {
+                   //          this->DrawApplicationTab(_layout->parentWidget());
+                   //      }
+                   //  }}
+                    };
 
     RebuildBody();
 }
@@ -52,7 +53,8 @@ void WorkflowGraphic::DrawTabs(QWidget *body) {
     std::vector<std::pair<std::string, std::function<void()>>> buttonsEvent = {
             {"Workflow", [this]() { SetTab(Tab::Workflow); }},
             {"Command", [this]() { SetTab(Tab::Command); }},
-            {"Application", [this]() { SetTab(Tab::Application); }}};
+            //{"Application", [this]() { SetTab(Tab::Application); }}
+    };
 
     QWidget *tabsWidget = new QWidget;
     auto *h = new QHBoxLayout(tabsWidget);
@@ -78,11 +80,12 @@ QPushButton *WorkflowGraphic::Tabs(const std::string& label, std::function<void(
     btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     btn->setMinimumWidth(0);
     btn->setFlat(true);
+    btn->setFocusPolicy(Qt::NoFocus);
+
     btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #2a2a2a; "
                        "color: white; }"
                        "QPushButton:hover { background-color: #343434; }"
-                       "QPushButton:pressed { background-color: #1b1b1b; }"
-                       "QPushButton:focus { background-color: #343434; border: none; outline: none; }");
+                       "QPushButton:pressed { background-color: #1b1b1b; }");
 
     QObject::connect(btn, &QPushButton::clicked, btn, [onClick]() { onClick(); });
     return btn;

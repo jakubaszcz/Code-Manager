@@ -51,7 +51,7 @@ QWidget *WorkflowGraphic::FileManagerRow() {
     btn->setCursor(Qt::PointingHandCursor);
     btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    row->setFocusPolicy(Qt::StrongFocus);
+    row->setFocusPolicy(Qt::NoFocus);
 
     btn->setStyleSheet("QPushButton {"
                        "  border: none;"
@@ -104,7 +104,8 @@ QWidget *WorkflowGraphic::TerminalRow() {
     btn->setCursor(Qt::PointingHandCursor);
     btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    row->setFocusPolicy(Qt::StrongFocus);
+    row->setFocusPolicy(Qt::NoFocus);
+
 
     btn->setStyleSheet("QPushButton {"
                        "  border: none;"

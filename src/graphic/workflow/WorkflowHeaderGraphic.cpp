@@ -23,6 +23,8 @@ void WorkflowGraphic::DrawHeader(QVBoxLayout *layout) {
     QPushButton *headerBox = new QPushButton();
     headerBox->setFixedHeight(40);
     headerBox->setFlat(true);
+    headerBox->setFocusPolicy(Qt::NoFocus);
+
     headerBox->setStyleSheet(R"(
             QPushButton {
                 border: none;
