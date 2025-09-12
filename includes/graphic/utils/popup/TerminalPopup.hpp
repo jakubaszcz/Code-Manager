@@ -5,6 +5,9 @@
 
 
 #include "IPopup.hpp"
+#include <QPlainTextEdit>
+#include <QLineEdit>
+#include <QVBoxLayout>
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -21,9 +24,9 @@ class TerminalPopup : public IPopup {
         void OnReadyStdErr();
         void OnFinished(int code, QProcess::ExitStatus st);
         void SendInput();
-        void appendRaw(const QByteArray& data);
-        QProcess* proc_;
-        QPlainTextEdit* view_;
-        QLineEdit* input_;
-        QPushButton* sendBtn_;
+        void AppendRaw(const QByteArray& data);
+        QProcess* _proc;
+        QPlainTextEdit* _view;
+        QLineEdit* _input;
+        QVBoxLayout* _layout;
 };

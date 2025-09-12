@@ -11,6 +11,7 @@
 #include <QPoint>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QProcess>
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
