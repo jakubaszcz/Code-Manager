@@ -6,6 +6,7 @@
 #include <QShortcut>
 #include <QUrl>
 #include <QVBoxLayout>
+#include <iostream>
 #include <QWidget>
 
 
@@ -37,6 +38,13 @@ void WorkflowGraphic::SetTab(Tab tab) {
     if (_tab == tab)
         return;
     _tab = tab;
+
+    for (size_t i = 0; i < _keyboardEventTab.size(); ++i) {
+        if (_keyboardEventTab[i] == _tab) {
+            _currentKeyboardEventTab = i;
+            break;
+        }
+    }
 
     RebuildBody();
 }

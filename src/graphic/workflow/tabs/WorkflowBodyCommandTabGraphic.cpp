@@ -3,6 +3,7 @@
 #include <string>
 #include "../../../../includes/graphic/WorkflowGraphic.hpp"
 #include "../../../../includes/graphic/utils/popup/NamePopup.hpp"
+#include "../../../../includes/graphic/utils/popup/TerminalPopup.hpp"
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -165,7 +166,7 @@ QWidget *WorkflowGraphic::Command(const std::string& id) {
         input->clear();
     });
 
-    QObject::connect(btn, &QPushButton::clicked, row, [this, input, id]() {
+    QObject::connect(btn, &QPushButton::clicked, row, [this, input, id, row]() {
         QString cmd = input->text().trimmed();
         if (cmd.isEmpty()) {
             const auto cfg = _application->GetData()->GetConfigMap();
@@ -181,12 +182,10 @@ QWidget *WorkflowGraphic::Command(const std::string& id) {
         if (!newDir.isEmpty())
             QDir::setCurrent(newDir);
 
-#ifdef Q_OS_WIN
-        int exitCode = QProcess::execute("cmd", {"/C", cmd});
-#else
-        int exitCode = QProcess::execute("/bin/sh", {"-c", cmd});
-#endif
-        Q_UNUSED(exitCode);
+        auto* term = new TerminalPopup(row);
+term->show();
+term->StartCommand(cmd, {});
+        term->Draw();
 
         QDir::setCurrent(oldDir);
     });

@@ -65,6 +65,9 @@ private:
     Tab _tab{Tab::Workflow};
     int _currentRow{0};
 
+    std::vector<Tab> _keyboardEventTab{Tab::Workflow, Tab::Command};
+    int _currentKeyboardEventTab{0};
+
     QVBoxLayout *_layout{nullptr};
 };
 

@@ -40,6 +40,8 @@ void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
                    //  }}
                     };
 
+
+
     RebuildBody();
 }
 
@@ -56,6 +58,7 @@ void WorkflowGraphic::DrawTabs(QWidget *body) {
             //{"Application", [this]() { SetTab(Tab::Application); }}
     };
 
+
     QWidget *tabsWidget = new QWidget;
     auto *h = new QHBoxLayout(tabsWidget);
     h->setContentsMargins(0, 0, 0, 0);
@@ -65,6 +68,20 @@ void WorkflowGraphic::DrawTabs(QWidget *body) {
         QPushButton *btn = Tabs(name, event);
         h->addWidget(btn, 1);
     }
+
+    auto *right = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Right), tabsWidget);
+    auto *left = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Left), tabsWidget);
+
+    QObject::connect(right, &QShortcut::activated, tabsWidget, [this]() {
+        _currentKeyboardEventTab = (_currentKeyboardEventTab + 1) % _keyboardEventTab.size();
+        SetTab(_keyboardEventTab[_currentKeyboardEventTab]);
+    });
+
+    QObject::connect(left, &QShortcut::activated, tabsWidget, [this]() {
+        _currentKeyboardEventTab--;
+        if (_currentKeyboardEventTab < 0) _currentKeyboardEventTab = _keyboardEventTab.size() - 1;
+        SetTab(_keyboardEventTab[_currentKeyboardEventTab]);
+    });
 
     tabsWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     layout->addWidget(tabsWidget);
