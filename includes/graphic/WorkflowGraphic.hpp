@@ -45,7 +45,7 @@ private:
     void DrawBody(QVBoxLayout *);
 
     void DrawTabs(QWidget *);
-    QPushButton *Tabs(const std::string&, std::function<void()>);
+    QPushButton *Tabs(const std::string&, std::function<void()>, Tab);
 
     void DrawWorkflowTab(QWidget *);
     QWidget *FileManagerRow();

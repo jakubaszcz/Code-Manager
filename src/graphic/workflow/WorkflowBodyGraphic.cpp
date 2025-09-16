@@ -64,10 +64,14 @@ void WorkflowGraphic::DrawTabs(QWidget *body) {
     h->setContentsMargins(0, 0, 0, 0);
     h->setSpacing(0);
 
-    for (auto& [name, event]: buttonsEvent) {
-        QPushButton *btn = Tabs(name, event);
+    for (int i = 0; i < _keyboardEventTab.size(); ++i) {
+        const auto& tab = _keyboardEventTab[i];
+        const auto& [name, event] = buttonsEvent[i];
+
+        QPushButton *btn = Tabs(name, event, tab);
         h->addWidget(btn, 1);
     }
+
 
     auto *right = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Right), tabsWidget);
     auto *left = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Left), tabsWidget);
@@ -91,7 +95,7 @@ void WorkflowGraphic::DrawTabs(QWidget *body) {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QPushButton *WorkflowGraphic::Tabs(const std::string& label, std::function<void()> onClick) {
+QPushButton *WorkflowGraphic::Tabs(const std::string& label, std::function<void()> onClick, Tab tab) {
     auto *btn = new QPushButton(QString::fromStdString(label));
     btn->setCursor(Qt::PointingHandCursor);
     btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -99,10 +103,17 @@ QPushButton *WorkflowGraphic::Tabs(const std::string& label, std::function<void(
     btn->setFlat(true);
     btn->setFocusPolicy(Qt::NoFocus);
 
-    btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #2a2a2a; "
+    if (tab == _tab) {
+        btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #1b1b1b; "
+                   "color: white; }"
+                   "QPushButton:hover { background-color: #343434; }"
+                   "QPushButton:pressed { background-color: #1b1b1b; }");
+    } else {
+        btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #2a2a2a; "
                        "color: white; }"
                        "QPushButton:hover { background-color: #343434; }"
                        "QPushButton:pressed { background-color: #1b1b1b; }");
+    }
 
     QObject::connect(btn, &QPushButton::clicked, btn, [onClick]() { onClick(); });
     return btn;
