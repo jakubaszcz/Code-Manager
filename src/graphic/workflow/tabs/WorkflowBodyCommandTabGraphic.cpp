@@ -25,6 +25,7 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 
     _commandTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), cmdWidget);
     _commandTabDown = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), cmdWidget);
+    _commandTabEnter = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), cmdWidget);
 
     QObject::connect(_commandTabUp, &QShortcut::activated, cmdWidget, [this]() {
         _currentKeyboardEventCommand--;
@@ -83,6 +84,16 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
             }
         }
     }
+
+    QObject::connect(_commandTabEnter, &QShortcut::activated, cmdWidget, [this]() {
+        QWidget *w = _keyboardEventCommand[_currentKeyboardEventCommand];
+        if (w) {
+            QPushButton *btn = w->findChild<QPushButton *>();
+            if (btn) {
+                btn->click();  // ou btn->animateClick();
+            }
+}
+    });
 
     boxLayout->addStretch();
 

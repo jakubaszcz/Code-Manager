@@ -74,6 +74,7 @@ private:
 
     QShortcut *_commandTabUp = nullptr;
     QShortcut *_commandTabDown = nullptr;
+    QShortcut *_commandTabEnter = nullptr;
 
     QVBoxLayout *_layout{nullptr};
 };
