@@ -64,7 +64,7 @@ void WorkflowGraphic::DrawTabs(QWidget *body) {
     h->setContentsMargins(0, 0, 0, 0);
     h->setSpacing(0);
 
-    for (int i = 0; i < _keyboardEventTab.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(_keyboardEventTab.size()); ++i) {
         const auto& tab = _keyboardEventTab[i];
         const auto& [name, event] = buttonsEvent[i];
 

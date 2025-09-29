@@ -71,6 +71,7 @@ private:
 
     std::vector<QWidget *> _keyboardEventCommand;
     int _currentKeyboardEventCommand{0};
+    QShortcut *_commandTabAdd = nullptr;
     QShortcut *_commandTabUp = nullptr;
     QShortcut *_commandTabDown = nullptr;
     QShortcut *_commandTabEnter = nullptr;

@@ -21,6 +21,15 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 
     QWidget *cmdWidget = new QWidget(body);
     AddCommand(cmdWidget);
+
+    _commandTabAdd = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_A), cmdWidget);
+
+    QObject::connect(_commandTabAdd, &QShortcut::activated, cmdWidget, [this, cmdWidget]() {
+        QPushButton *btn = cmdWidget->findChild<QPushButton *>();
+        if (btn && btn->text() == "+") {
+            btn->click();
+        }
+    });
     layout->addWidget(cmdWidget);
 
     _commandTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), cmdWidget);
@@ -89,7 +98,7 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
             if (btn) {
                 btn->click();  // ou btn->animateClick();
             }
-}
+        }
     });
 
     boxLayout->addStretch();
