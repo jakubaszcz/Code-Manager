@@ -16,6 +16,7 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QShortcut>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -53,7 +54,7 @@ private:
 
     void DrawCommandTab(QWidget *);
     void AddCommand(QWidget *);
-    QWidget *Command(const std::string&);
+    QWidget *Command(const std::string&, int);
 
     void DrawApplicationTab(QWidget *);
     void AddApplication(QWidget *);
@@ -67,6 +68,12 @@ private:
 
     std::vector<Tab> _keyboardEventTab{Tab::Workflow, Tab::Command};
     int _currentKeyboardEventTab{0};
+
+    std::vector<QWidget *> _keyboardEventCommand;
+    int _currentKeyboardEventCommand{0};
+
+    QShortcut *_commandTabUp = nullptr;
+    QShortcut *_commandTabDown = nullptr;
 
     QVBoxLayout *_layout{nullptr};
 };

@@ -10,6 +10,8 @@
 
 void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 
+    _keyboardEventCommand.clear();
+
     auto *layout = qobject_cast<QVBoxLayout *>(body->layout());
     if (!layout) {
         layout = new QVBoxLayout(body);
@@ -20,6 +22,20 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
     QWidget *cmdWidget = new QWidget(body);
     AddCommand(cmdWidget);
     layout->addWidget(cmdWidget);
+
+    _commandTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), cmdWidget);
+    _commandTabDown = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), cmdWidget);
+
+    QObject::connect(_commandTabUp, &QShortcut::activated, cmdWidget, [this]() {
+        _currentKeyboardEventCommand--;
+        if (_currentKeyboardEventCommand < 0) _currentKeyboardEventCommand = _keyboardEventCommand.size() - 1;
+        RebuildBody();
+    });
+
+    QObject::connect(_commandTabDown, &QShortcut::activated, cmdWidget, [this]() {
+        _currentKeyboardEventCommand = (_currentKeyboardEventCommand + 1) % _keyboardEventCommand.size();
+        RebuildBody();
+    });
 
     auto *scroll = new QScrollArea(body);
     scroll->setWidgetResizable(true);
@@ -52,11 +68,18 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
     boxLayout->setContentsMargins(0, 0, 0, 0);
     boxLayout->setSpacing(0);
 
+
+
+
+    int id = 0;
+
     const auto& cfg = _application->GetData()->GetConfigMap();
     for (const auto& [key, value]: cfg) {
         if (key.rfind(_application->GetData()->GetCustomConfigMap()[Data::ConfigType::Command], 0) == 0) {
-            if (QWidget *w = Command(key)) {
+            if (QWidget *w = Command(key, id)) {
+                _keyboardEventCommand.push_back(w);
                 boxLayout->addWidget(w, 0, Qt::AlignTop);
+                id++;
             }
         }
     }
@@ -111,7 +134,7 @@ void WorkflowGraphic::AddCommand(QWidget *container) {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QWidget *WorkflowGraphic::Command(const std::string& id) {
+QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
     QWidget *row = new QWidget;
     row->setFocusPolicy(Qt::StrongFocus);
     row->setStyleSheet("QWidget { background-color: #2a2a2a; }");
@@ -125,16 +148,22 @@ QWidget *WorkflowGraphic::Command(const std::string& id) {
     btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     btn->setMinimumWidth(0);
     btn->setFlat(true);
-    btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #2a2a2a; "
+    if (id == _currentKeyboardEventCommand) {
+        btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #1b1b1b; "
                        "color: white; }"
                        "QPushButton:hover { background-color: #343434; }"
-                       "QPushButton:pressed { background-color: #1b1b1b; }"
-                       "QPushButton:focus { background-color: #343434; border: none; outline: none; }");
+                       "QPushButton:pressed { background-color: #1b1b1b; }");
+    } else {
+        btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #2a2a2a; "
+               "color: white; }"
+               "QPushButton:hover { background-color: #343434; }"
+               "QPushButton:pressed { background-color: #1b1b1b; }");
+    }
 
     auto *input = new QLineEdit(row);
     {
         const auto cfg = _application->GetData()->GetConfigMap();
-        const auto it = cfg.find(id);
+        const auto it = cfg.find(code);
         const std::string customCmd = (it != cfg.end()) ? it->second : std::string();
         input->setPlaceholderText(QString::fromStdString(customCmd.empty() ? "Enter custom command." : customCmd));
     }
@@ -157,20 +186,20 @@ QWidget *WorkflowGraphic::Command(const std::string& id) {
     h->addWidget(input, 0, Qt::AlignRight);
     h->addWidget(btnRemove, 0, Qt::AlignRight);
 
-    QObject::connect(input, &QLineEdit::returnPressed, row, [this, input, id]() {
+    QObject::connect(input, &QLineEdit::returnPressed, row, [this, input, code]() {
         const QString cmd = input->text().trimmed();
         if (cmd.isEmpty())
             return;
-        _application->GetData()->ChangeConfig(id, input->text().toStdString());
+        _application->GetData()->ChangeConfig(code, input->text().toStdString());
         input->setPlaceholderText(cmd);
         input->clear();
     });
 
-    QObject::connect(btn, &QPushButton::clicked, row, [this, input, id, row]() {
+    QObject::connect(btn, &QPushButton::clicked, row, [this, input, code, row]() {
         QString cmd = input->text().trimmed();
         if (cmd.isEmpty()) {
             const auto cfg = _application->GetData()->GetConfigMap();
-            const auto it = cfg.find(id);
+            const auto it = cfg.find(code);
             if (it != cfg.end())
                 cmd = QString::fromStdString(it->second);
         }
@@ -190,8 +219,8 @@ term->StartCommand(cmd, {});
         QDir::setCurrent(oldDir);
     });
 
-    QObject::connect(btnRemove, &QPushButton::clicked, row, [this, id]() {
-        _application->GetData()->RemoveCommand(id);
+    QObject::connect(btnRemove, &QPushButton::clicked, row, [this, code]() {
+        _application->GetData()->RemoveCommand(code);
         RebuildBody();
     });
 
