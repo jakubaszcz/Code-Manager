@@ -69,9 +69,6 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
     boxLayout->setContentsMargins(0, 0, 0, 0);
     boxLayout->setSpacing(0);
 
-
-
-
     int id = 0;
 
     const auto& cfg = _application->GetData()->GetConfigMap();

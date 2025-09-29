@@ -25,10 +25,39 @@ void WorkflowGraphic::DrawWorkflowTab(QWidget *body) {
     boxLayout->setContentsMargins(0, 0, 0, 0);
     boxLayout->setSpacing(0);
 
-    if (QWidget *w = FileManagerRow())
+    _workflowTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), box);
+    _workflowTabDown = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), box);
+    _workflowTabEnter = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), box);
+
+    QObject::connect(_workflowTabUp, &QShortcut::activated, box, [this]() {
+        _currentKeyboardEventWorkflow--;
+        if (_currentKeyboardEventWorkflow < 0) _currentKeyboardEventWorkflow = _keyboardEventWorkflow.size() - 1;
+        RebuildBody();
+    });
+
+    QObject::connect(_workflowTabDown, &QShortcut::activated, box, [this]() {
+        _currentKeyboardEventWorkflow = (_currentKeyboardEventWorkflow + 1) % _keyboardEventWorkflow.size();
+        RebuildBody();
+    });
+
+    if (QWidget *w = FileManagerRow(0)) {
         boxLayout->addWidget(w);
-    if (QWidget *w = TerminalRow())
+        _keyboardEventWorkflow.push_back(w);
+    }
+    if (QWidget *w = TerminalRow(1)) {
         boxLayout->addWidget(w);
+        _keyboardEventWorkflow.push_back(w);
+    }
+
+    QObject::connect(_workflowTabEnter, &QShortcut::activated, box, [this]() {
+        QWidget *w = _keyboardEventWorkflow[_currentKeyboardEventWorkflow];
+        if (w) {
+            QPushButton *btn = w->findChild<QPushButton *>();
+            if (btn) {
+                btn->click();
+            }
+        }
+    });
 
     boxLayout->addStretch();
 
@@ -38,7 +67,7 @@ void WorkflowGraphic::DrawWorkflowTab(QWidget *body) {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QWidget *WorkflowGraphic::FileManagerRow() {
+QWidget *WorkflowGraphic::FileManagerRow(int id) {
     QWidget *row = new QWidget;
     QHBoxLayout *h = new QHBoxLayout(row);
     h->setContentsMargins(0, 0, 0, 0);
@@ -53,21 +82,31 @@ QWidget *WorkflowGraphic::FileManagerRow() {
 
     row->setFocusPolicy(Qt::NoFocus);
 
-    btn->setStyleSheet("QPushButton {"
-                       "  border: none;"
-                       "  border-radius: 0px;"
-                       "  padding: 8px 12px;"
-                       "  background-color: #1e1e1e;"
-                       "  color: white;"
-                       "  text-align: left;"
-                       "}"
-                       "QPushButton:hover { background-color: #343434; }"
-                       "QPushButton:pressed { background-color: #1b1b1b; }"
-                       "QPushButton:focus { background-color: #343434;"
-                       " border: none;"
-                       " border-radius: 0px;"
-                       " outline: none;"
-                       "}");
+    if (id == _currentKeyboardEventWorkflow) {
+        btn->setStyleSheet("QPushButton {"
+                   "  border: none;"
+                   "  border-radius: 0px;"
+                   "  padding: 8px 12px;"
+                   "  background-color: #1b1b1b;"
+                   "  color: white;"
+                   "  text-align: left;"
+                   "}"
+                   "QPushButton:hover { background-color: #343434; }"
+                   "QPushButton:pressed { background-color: #1b1b1b; }");
+    } else {
+        btn->setStyleSheet("QPushButton {"
+                   "  border: none;"
+                   "  border-radius: 0px;"
+                   "  padding: 8px 12px;"
+                   "  background-color: #1e1e1e;"
+                   "  color: white;"
+                   "  text-align: left;"
+                   "}"
+                   "QPushButton:hover { background-color: #343434; }"
+                   "QPushButton:pressed { background-color: #1b1b1b; }");
+
+    }
+
 
     // Event
     {
@@ -91,7 +130,7 @@ QWidget *WorkflowGraphic::FileManagerRow() {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QWidget *WorkflowGraphic::TerminalRow() {
+QWidget *WorkflowGraphic::TerminalRow(int id) {
     QWidget *row = new QWidget;
     QHBoxLayout *h = new QHBoxLayout(row);
     h->setContentsMargins(0, 0, 0, 0);
@@ -106,23 +145,30 @@ QWidget *WorkflowGraphic::TerminalRow() {
 
     row->setFocusPolicy(Qt::NoFocus);
 
+    if (id == _currentKeyboardEventWorkflow) {
+        btn->setStyleSheet("QPushButton {"
+                   "  border: none;"
+                   "  border-radius: 0px;"
+                   "  padding: 8px 12px;"
+                   "  background-color: #1b1b1b;"
+                   "  color: white;"
+                   "  text-align: left;"
+                   "}"
+                   "QPushButton:hover { background-color: #343434; }"
+                   "QPushButton:pressed { background-color: #1b1b1b; }");
+    } else {
+        btn->setStyleSheet("QPushButton {"
+                   "  border: none;"
+                   "  border-radius: 0px;"
+                   "  padding: 8px 12px;"
+                   "  background-color: #1e1e1e;"
+                   "  color: white;"
+                   "  text-align: left;"
+                   "}"
+                   "QPushButton:hover { background-color: #343434; }"
+                   "QPushButton:pressed { background-color: #1b1b1b; }");
 
-    btn->setStyleSheet("QPushButton {"
-                       "  border: none;"
-                       "  border-radius: 0px;"
-                       "  padding: 8px 12px;"
-                       "  background-color: #1e1e1e;"
-                       "  color: white;"
-                       "  text-align: left;"
-                       "}"
-                       "QPushButton:hover { background-color: #343434; }"
-                       "QPushButton:pressed { background-color: #1b1b1b; }"
-                       "QPushButton:focus { background-color: #343434;"
-                       " border: none;"
-                       " border-radius: 0px;"
-                       " outline: none;"
-                       "}");
-
+    }
     // Event
     {
 

@@ -49,8 +49,8 @@ private:
     QPushButton *Tabs(const std::string&, std::function<void()>, Tab);
 
     void DrawWorkflowTab(QWidget *);
-    QWidget *FileManagerRow();
-    QWidget *TerminalRow();
+    QWidget *FileManagerRow(int);
+    QWidget *TerminalRow(int);
 
     void DrawCommandTab(QWidget *);
     void AddCommand(QWidget *);
@@ -71,10 +71,15 @@ private:
 
     std::vector<QWidget *> _keyboardEventCommand;
     int _currentKeyboardEventCommand{0};
-
     QShortcut *_commandTabUp = nullptr;
     QShortcut *_commandTabDown = nullptr;
     QShortcut *_commandTabEnter = nullptr;
+
+    std::vector<QWidget *> _keyboardEventWorkflow;
+    int _currentKeyboardEventWorkflow{0};
+    QShortcut *_workflowTabUp = nullptr;
+    QShortcut *_workflowTabDown = nullptr;
+    QShortcut *_workflowTabEnter = nullptr;
 
     QVBoxLayout *_layout{nullptr};
 };
