@@ -9,6 +9,7 @@
 Software::Software(std::shared_ptr<Application> app) : _application(std::move(app)) {
     _workflowGraphic = std::make_unique<WorkflowGraphic>(_application);
     _menuGraphic = std::make_unique<MenuGraphic>(_application);
+    _settingsGraphic = std::make_unique<SettingsGraphic>(_application);
     _menuGraphic->SetRedraw([this]() { this->Draw(); });
 }
 
@@ -26,22 +27,22 @@ void Software::Draw() {
         window->setAttribute(Qt::WA_DeleteOnClose);
         window->setStyleSheet("background-color: #1e1e1e;");
 
-        auto *escape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
-        QObject::connect(escape, &QShortcut::activated, window, [this]() {
-            switch (_application->GetCurrentWindow()) {
-                case Windows::Workflow:
-                    _application->SetCurrentWindow(Windows::Menu);
-                    Draw();
-                    break;
-                default:
-                    break;
-            }
-        });
-
         QVBoxLayout *mLayout = new QVBoxLayout(window);
         mLayout->setContentsMargins(0, 0, 0, 0);
         mLayout->setSpacing(0);
     }
+
+    auto *escape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
+    QObject::connect(escape, &QShortcut::activated, window, [this]() {
+        switch (_application->GetCurrentWindow()) {
+            case Windows::Workflow:
+                _application->SetCurrentWindow(Windows::Menu);
+                Draw();
+                break;
+            default:
+                break;
+        }
+    });
 
     auto *mLayout = qobject_cast<QVBoxLayout *>(window->layout());
     QLayoutItem *child;
@@ -55,11 +56,11 @@ void Software::Draw() {
     QVBoxLayout *bWidgetLayout = new QVBoxLayout(bWidget);
 
     switch (_application->GetCurrentWindow()) {
-        case Windows::Menu: {
+        case Windows::Menu:
             _menuGraphic->Draw(bWidgetLayout);
             break;
-        }
         case Windows::Setting:
+            _settingsGraphic->Draw(bWidgetLayout);
             break;
         case Windows::Workflow: {
             _workflowGraphic->Draw(bWidgetLayout);

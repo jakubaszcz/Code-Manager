@@ -10,6 +10,7 @@ SRC =	Main.cpp	\
         src/graphic/workflow/tabs/WorkflowBodyCommandTabGraphic.cpp	\
         src/graphic/workflow/tabs/WorkflowBodyApplicationTabGraphic.cpp	\
         src/graphic/MenuGraphic.cpp	\
+        src/graphic/SettingsGraphic.cpp	\
         src/graphic/popup/IPopup.cpp	\
         src/graphic/popup/NamePopup.cpp	\
         src/graphic/popup/TerminalPopup.cpp

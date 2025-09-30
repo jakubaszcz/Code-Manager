@@ -10,6 +10,7 @@
 #include "../graphic/IGraphic.hpp"
 #include "../graphic/MenuGraphic.hpp"
 #include "../graphic/WorkflowGraphic.hpp"
+#include "../graphic/SettingsGraphic.hpp"
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -19,7 +20,7 @@ class Application;
 class HeaderGraphic;
 class MenuGraphic;
 class WorkflowGraphic;
-
+class SettingsGraphic;
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -41,6 +42,7 @@ private:
     // Graphics addon for the software
     std::unique_ptr<WorkflowGraphic> _workflowGraphic;
     std::unique_ptr<MenuGraphic> _menuGraphic;
+    std::unique_ptr<SettingsGraphic> _settingsGraphic;
 
     // Application with everything I need
     std::shared_ptr<Application> _application;
