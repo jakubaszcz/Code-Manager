@@ -15,20 +15,26 @@
 
 void WorkflowGraphic::DrawWorkflowTab(QWidget *body) {
 
+    // If the body don't exist return
     if (!body) return;
 
+    // Clear the keyboard event
     {
         _keyboardEventWorkflow.clear();
         _currentKeyboardEventWorkflow = 0;
     }
 
-    _workflowGlobalLayout = qobject_cast<QVBoxLayout *>(body->layout());
-    if (!_workflowGlobalLayout) {
-        _workflowGlobalLayout = new QVBoxLayout(body);
-        _workflowGlobalLayout->setContentsMargins(0, 0, 0, 0);
-        _workflowGlobalLayout->setSpacing(0);
+    // If the body has no layout, create one
+    {
+        _workflowGlobalLayout = qobject_cast<QVBoxLayout *>(body->layout());
+        if (!_workflowGlobalLayout) {
+            _workflowGlobalLayout = new QVBoxLayout(body);
+            _workflowGlobalLayout->setContentsMargins(0, 0, 0, 0);
+            _workflowGlobalLayout->setSpacing(0);
+        }
     }
 
+    // Constructor for the button box + keyBoard events
     CONST_WorkflowButtonsBox();
 }
 
@@ -37,76 +43,101 @@ void WorkflowGraphic::DrawWorkflowTab(QWidget *body) {
 
 
 QWidget *WorkflowGraphic::FileManagerRow(int id) {
-    QWidget *row = new QWidget;
-    QHBoxLayout *h = new QHBoxLayout(row);
-    h->setContentsMargins(0, 0, 0, 0);
-    h->setSpacing(0);
 
-    auto *btn = new QPushButton("Open File Manager", row);
-    if (!btn)
+    // Create widget
+    auto *widget = new QWidget;
+
+    // Create widget's layout
+    auto *layout = new QHBoxLayout(widget);
+
+    // Set layout's properties
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    // Create button
+    const auto title = "Open File Manager";
+
+    auto *button = new QPushButton(title, widget);
+    if (!button)
         return nullptr;
 
+    // Button style
+    {
+        button->setObjectName("workflow");
+        button->setProperty("workflow", "true");
+        button->setProperty("active", (id == _currentKeyboardEventWorkflow) ? "true" : "false");
 
-    btn->setObjectName("workflow");
-    btn->setProperty("workflow", "true");
-    btn->setProperty("active", (id == _currentKeyboardEventWorkflow) ? "true" : "false");
+        button->setAutoFillBackground(true);
+        button->setAttribute(Qt::WA_StyledBackground, true);
 
-    btn->setAutoFillBackground(true); // ← Ajoute ça
-    btn->setAttribute(Qt::WA_StyledBackground, true);
-
-    btn->style()->unpolish(btn);
-    btn->style()->polish(btn);
-    btn->update();
+        button->style()->unpolish(button);
+        button->style()->polish(button);
+        button->update();
+    }
 
     // Event
     {
 
-        QObject::connect(btn, &QPushButton::clicked, [this]() {
+        QObject::connect(button, &QPushButton::clicked, [this]() {
             const auto cfg = _application->GetData()->GetConfigMap();
             const auto it = cfg.find("wpath");
             const QString startDir = (it != cfg.end()) ? QString::fromStdString(it->second) : QString();
+
             QDesktopServices::openUrl(QUrl::fromLocalFile(startDir));
         });
     }
 
 
+    // Add button to layout
+    layout->addWidget(button, 1);
 
-    h->addWidget(btn, 1);
+    // Set focus proxy
+    widget->setFocusProxy(button);
 
-    row->setFocusProxy(btn);
-
-
-    return row;
+    // Return
+    return widget;
 }
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
 QWidget *WorkflowGraphic::TerminalRow(int id) {
-    QWidget *row = new QWidget;
-    QHBoxLayout *h = new QHBoxLayout(row);
-    h->setContentsMargins(0, 0, 0, 0);
-    h->setSpacing(0);
 
-    auto *btn = new QPushButton("Open Terminal", row);
-    if (!btn)
+    // Create widget
+    auto *widget = new QWidget;
+
+    // Create layout
+    auto *layout = new QHBoxLayout(widget);
+
+    // Set layout's properties
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    const auto title = "Open Terminal";
+
+    // Create button
+    auto *button = new QPushButton(title, widget);
+    if (!button)
         return nullptr;
 
-    btn->setObjectName("workflow");
-    btn->setProperty("workflow", "true");
-    btn->setProperty("active", (id == _currentKeyboardEventWorkflow) ? "true" : "false");
+    // Button style
+    {
+        button->setObjectName("workflow");
+        button->setProperty("workflow", "true");
+        button->setProperty("active", (id == _currentKeyboardEventWorkflow) ? "true" : "false");
 
-    btn->setAutoFillBackground(true); // ← Ajoute ça
-    btn->setAttribute(Qt::WA_StyledBackground, true);
+        button->setAutoFillBackground(true); // ← Ajoute ça
+        button->setAttribute(Qt::WA_StyledBackground, true);
 
-    btn->style()->unpolish(btn);
-    btn->style()->polish(btn);
-    btn->update();
+        button->style()->unpolish(button);
+        button->style()->polish(button);
+        button->update();
+    }
 
     // Event
     {
 
-        QObject::connect(btn, &QPushButton::clicked, [this]() {
+        QObject::connect(button, &QPushButton::clicked, [this]() {
             const auto cfg = _application->GetData()->GetConfigMap();
             const auto it = cfg.find("wpath");
             const QString wpath = (it != cfg.end()) ? QString::fromStdString(it->second) : QString();
@@ -114,42 +145,49 @@ QWidget *WorkflowGraphic::TerminalRow(int id) {
                 return;
 
 
-#ifdef Q_OS_WIN
-            QProcess::startDetached("cmd.exe", QStringList(), wpath);
-#elif defined(Q_OS_MAC)
-            QProcess::startDetached("open", QStringList() << "-a" << "Terminal" << wpath);
-#else
-            bool started = false;
-            started = QProcess::startDetached("x-terminal-emulator",
-                                              QStringList() << "--working-directory" << wpath);
-            if (!started) {
-                started = QProcess::startDetached("gnome-terminal",
-                                                  QStringList() << ("--working-directory=" + wpath));
-            }
-            if (!started) {
-                started = QProcess::startDetached("konsole",
-                                                  QStringList() << "--workdir" << wpath);
-            }
-            if (!started) {
-                const QString cmd = QString("cd \"%1\"; exec $SHELL -i").arg(wpath);
-                started = QProcess::startDetached("xterm",
-                                                  QStringList() << "-e" << "bash" << "-lc" << cmd);
-            }
-            Q_UNUSED(started);
-#endif
+            #ifdef Q_OS_WIN
+                        QProcess::startDetached("cmd.exe", QStringList(), wpath);
+            #elif defined(Q_OS_MAC)
+                        QProcess::startDetached("open", QStringList() << "-a" << "Terminal" << wpath);
+            #else
+                        bool started = false;
+                        started = QProcess::startDetached("x-terminal-emulator",
+                                                          QStringList() << "--working-directory" << wpath);
+                        if (!started) {
+                            started = QProcess::startDetached("gnome-terminal",
+                                                              QStringList() << ("--working-directory=" + wpath));
+                        }
+                        if (!started) {
+                            started = QProcess::startDetached("konsole",
+                                                              QStringList() << "--workdir" << wpath);
+                        }
+                        if (!started) {
+                            const QString cmd = QString("cd \"%1\"; exec $SHELL -i").arg(wpath);
+                            started = QProcess::startDetached("xterm",
+                                                              QStringList() << "-e" << "bash" << "-lc" << cmd);
+                        }
+                        Q_UNUSED(started);
+            #endif
         });
     }
 
-    h->addWidget(btn, 1);
+    // Add button to layout
+    layout->addWidget(button, 1);
 
-    row->setFocusProxy(btn);
+    // Set focus proxy
+    widget->setFocusProxy(button);
 
-    return row;
+    // Return
+    return widget;
 }
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
 void WorkflowGraphic::CONST_WorkflowButtonsBox() {
 
+    // Destroy button box if already existing
     {
 
         if (_workflowButtonBox) {
@@ -159,8 +197,10 @@ void WorkflowGraphic::CONST_WorkflowButtonsBox() {
 
     }
 
+    // Create button box
     _workflowButtonBox = new QWidget();
 
+    // Keyboard events
     {
 
         _workflowTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), _workflowButtonBox);
@@ -168,9 +208,10 @@ void WorkflowGraphic::CONST_WorkflowButtonsBox() {
         _workflowTabEnter= new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), _workflowButtonBox);
     }
 
-
+    // Create vertical box layout
     auto *boxLayout = new QVBoxLayout(_workflowButtonBox);
 
+    // Connect keyboard events
     {
         QObject::connect(_workflowTabUp, &QShortcut::activated, _workflowButtonBox, [this]() {
             int previous = _currentKeyboardEventWorkflow;
@@ -200,21 +241,37 @@ void WorkflowGraphic::CONST_WorkflowButtonsBox() {
 
     }
 
-
-    if (QWidget *w = FileManagerRow(0)) {
-        boxLayout->addWidget(w);
-        _keyboardEventWorkflow.push_back(w);
+    // Create buttons
+    {
+        if (QWidget *w = FileManagerRow(0)) {
+            boxLayout->addWidget(w);
+            _keyboardEventWorkflow.push_back(w);
+        }
+        if (QWidget *w = TerminalRow(1)) {
+            boxLayout->addWidget(w);
+            _keyboardEventWorkflow.push_back(w);
+        }
     }
-    if (QWidget *w = TerminalRow(1)) {
-        boxLayout->addWidget(w);
-        _keyboardEventWorkflow.push_back(w);
-    }
 
+    // Add stretch
     boxLayout->addStretch();
     _workflowGlobalLayout->addWidget(_workflowButtonBox);
 }
 
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 void WorkflowGraphic::UPDT_WorflowButton(int previous, int current) {
+
+    /*
+     * Update Buttons
+     * Fetch the previous button
+     * Fetch the current button
+     * Swap them
+     */
+
+    // Set the previous to false
     if (previous >= 0 && previous < static_cast<int>(_keyboardEventWorkflow.size())) {
         if (auto btn = _keyboardEventWorkflow[previous]->findChild<QPushButton*>()) {
             btn->setProperty("active", "false");
@@ -224,6 +281,7 @@ void WorkflowGraphic::UPDT_WorflowButton(int previous, int current) {
         }
     }
 
+    // Set the current to true
     if (current >= 0 && current < static_cast<int>(_keyboardEventWorkflow.size())) {
         if (auto btn = _keyboardEventWorkflow[current]->findChild<QPushButton*>()) {
             btn->setProperty("active", "true");
@@ -235,3 +293,4 @@ void WorkflowGraphic::UPDT_WorflowButton(int previous, int current) {
 }
 
 
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
