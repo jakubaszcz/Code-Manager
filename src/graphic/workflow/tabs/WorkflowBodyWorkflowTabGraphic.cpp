@@ -63,6 +63,8 @@ QWidget *WorkflowGraphic::FileManagerRow(int id) {
 
     // Button style
     {
+        button->setFocusPolicy(Qt::NoFocus);
+
         button->setObjectName("workflow");
         button->setProperty("workflow", "true");
         button->setProperty("active", (id == _currentKeyboardEventWorkflow) ? "true" : "false");
@@ -122,6 +124,8 @@ QWidget *WorkflowGraphic::TerminalRow(int id) {
 
     // Button style
     {
+        button->setFocusPolicy(Qt::NoFocus);
+
         button->setObjectName("workflow");
         button->setProperty("workflow", "true");
         button->setProperty("active", (id == _currentKeyboardEventWorkflow) ? "true" : "false");
