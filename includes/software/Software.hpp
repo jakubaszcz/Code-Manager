@@ -47,5 +47,4 @@ private:
     // Application with everything I need
     std::shared_ptr<Application> _application;
     WindowSize _windowSize{1200, 800};
-    //
 };

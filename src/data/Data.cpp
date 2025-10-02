@@ -50,7 +50,7 @@ bool Data::CreateDefaultConfig() {
     // Create config file
     std::ofstream file("config.cfg");
 
-    // Close file to avoid multipl openning
+    // Close file to avoid multiple openning
     file.close();
     return true;
 }

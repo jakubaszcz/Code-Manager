@@ -41,7 +41,11 @@ public:
     Tab GetTab();
 
 private:
-    void RebuildBody();
+    void RebuildBody(); // Tab Changing
+
+    void CONST_WorkflowButtonsBox();
+    void UPDT_WorflowButton(int, int);
+
     void DrawHeader(QVBoxLayout *);
     void DrawBody(QVBoxLayout *);
 
@@ -83,5 +87,9 @@ private:
     QShortcut *_workflowTabEnter = nullptr;
 
     QVBoxLayout *_layout{nullptr};
+    QWidget *_commandBox{nullptr};
+
+    QVBoxLayout *_workflowGlobalLayout{nullptr};
+    QWidget *_workflowButtonBox{nullptr};
 };
 

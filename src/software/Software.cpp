@@ -25,7 +25,6 @@ void Software::Draw() {
         window->resize(_windowSize.width, _windowSize.height);
         window->setWindowFlags(Qt::FramelessWindowHint);
         window->setAttribute(Qt::WA_DeleteOnClose);
-        window->setStyleSheet("background-color: #1e1e1e;");
 
         QVBoxLayout *mLayout = new QVBoxLayout(window);
         mLayout->setContentsMargins(0, 0, 0, 0);
