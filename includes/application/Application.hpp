@@ -48,6 +48,7 @@ public:
 
     bool Initialize();
     int Run(int argc, char *argv[]);
+    QString LoadQSSFile(const QString&);
     std::shared_ptr<Data> GetData() const;
     std::shared_ptr<Audio> GetAudio() const;
     void SetCurrentWindow(Windows window);

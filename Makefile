@@ -1,4 +1,5 @@
 SRC =	Main.cpp	\
+		qrc_styles.cpp	\
         src/application/Application.cpp \
         src/data/Data.cpp	\
         src/software/Software.cpp	\
@@ -22,6 +23,7 @@ LDFLAGS = `pkg-config --libs Qt6Widgets`
 all: $(NAME)
 
 $(NAME): $(SRC)
+	rcc -o qrc_styles.cpp style.qrc
 	$(CC) $(CFLAGS) $(SRC) -o $(NAME) $(LDFLAGS)
 
 clean:

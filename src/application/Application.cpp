@@ -85,12 +85,26 @@ Windows Application::GetCurrentWindow() const {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-#include "../../includes/graphic/IGraphic.hpp"
 
 int Application::Run(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
+
+    QFile styleFile(":/styles/main/WorkflowTab.qss");
+
+    if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
+        QString qss = styleFile.readAll();
+        app.setStyleSheet(qss);
+    }
+
     _software->Draw();
 
     return app.exec();
+}
+
+QString Application::LoadQSSFile(const QString &path) {
+    QFile file(path);
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+        return "";
+    return QLatin1String(file.readAll());
 }

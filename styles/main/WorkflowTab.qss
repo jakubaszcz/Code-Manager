@@ -1,0 +1,27 @@
+QPushButton#workflow {
+    background: #1e1e1e !important;
+    border: 1px solid #1e1e1e;
+    border-radius: 0px;
+    padding: 8px 12px;
+    color: white;
+    text-align: left;
+}
+
+/* Hover */
+QPushButton#workflow:hover {
+    background: #343434 !important;
+    border: 1px solid #343434;
+}
+
+/* Pressed */
+QPushButton#workflow:pressed {
+    background: #1b1b1b !important;
+    border: 1px solid #1b1b1b;
+}
+
+/* Actif */
+QPushButton#workflow[active="true"] {
+    background: #007acc !important;
+    border: 1px solid #007acc;
+    color: white;
+}
