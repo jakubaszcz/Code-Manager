@@ -11,4 +11,4 @@ SettingsGraphic::SettingsGraphic(std::shared_ptr<Application> application) : IGr
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-void SettingsGraphic::Draw(QVBoxLayout *layout) {}
+void SettingsGraphic::Draw(QVBoxLayout *layout) { (void)layout; }
