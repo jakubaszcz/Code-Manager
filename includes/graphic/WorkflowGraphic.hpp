@@ -15,6 +15,7 @@
 #include <QPushButton>
 #include <QUrl>
 #include <QVBoxLayout>
+#include <QScrollArea>
 #include <QWidget>
 #include <QShortcut>
 #include <functional>
@@ -43,22 +44,50 @@ public:
 private:
     void RebuildBody(); // Tab Changing
 
+    // Workflow tab
+    void DrawWorkflowTab(QWidget *);
+    QWidget *FileManagerRow(int);
+    QWidget *TerminalRow(int);
     void CONST_WorkflowButtonsBox();
     void UPDT_WorflowButton(int, int);
+
+    // Workflow tab variables
+    QVBoxLayout *_workflowGlobalLayout{nullptr};
+    QWidget *_workflowButtonBox{nullptr};
+    std::vector<QWidget *> _keyboardEventWorkflow;
+    int _currentKeyboardEventWorkflow{0};
+    QShortcut *_workflowTabUp = nullptr;
+    QShortcut *_workflowTabDown = nullptr;
+    QShortcut *_workflowTabEnter = nullptr;
+
+    // Command tab
+    QBoxLayout *_commandGlobalLayout{nullptr};
+    QWidget *_commandButtonBox{nullptr};
+    QWidget *_commandAddWidget{nullptr};
+    QScrollArea *_commandScrollArea{nullptr};
+
+
+    void DrawCommandTab(QWidget *);
+    void AddCommand();
+    QWidget *Command(const std::string&, int);
+    void CONST_CommmandAddButton();
+    void CONST_CommandButtonsBox();
+    void UPDT_CommandButton(int, int);
+
+    // Command tab variables
+    std::vector<QWidget *> _keyboardEventCommand;
+    int _currentKeyboardEventCommand{0};
+    QShortcut *_commandShortcutAdd = nullptr;
+    QShortcut *_commandTabUp = nullptr;
+    QShortcut *_commandTabDown = nullptr;
+    QShortcut *_commandTabEnter = nullptr;
+
 
     void DrawHeader(QVBoxLayout *);
     void DrawBody(QVBoxLayout *);
 
     void DrawTabs(QWidget *);
     QPushButton *Tabs(const std::string&, std::function<void()>, Tab);
-
-    void DrawWorkflowTab(QWidget *);
-    QWidget *FileManagerRow(int);
-    QWidget *TerminalRow(int);
-
-    void DrawCommandTab(QWidget *);
-    void AddCommand(QWidget *);
-    QWidget *Command(const std::string&, int);
 
     void DrawApplicationTab(QWidget *);
     void AddApplication(QWidget *);
@@ -73,23 +102,8 @@ private:
     std::vector<Tab> _keyboardEventTab{Tab::Workflow, Tab::Command};
     int _currentKeyboardEventTab{0};
 
-    std::vector<QWidget *> _keyboardEventCommand;
-    int _currentKeyboardEventCommand{0};
-    QShortcut *_commandTabAdd = nullptr;
-    QShortcut *_commandTabUp = nullptr;
-    QShortcut *_commandTabDown = nullptr;
-    QShortcut *_commandTabEnter = nullptr;
-
-    std::vector<QWidget *> _keyboardEventWorkflow;
-    int _currentKeyboardEventWorkflow{0};
-    QShortcut *_workflowTabUp = nullptr;
-    QShortcut *_workflowTabDown = nullptr;
-    QShortcut *_workflowTabEnter = nullptr;
-
     QVBoxLayout *_layout{nullptr};
     QWidget *_commandBox{nullptr};
 
-    QVBoxLayout *_workflowGlobalLayout{nullptr};
-    QWidget *_workflowButtonBox{nullptr};
 };
 

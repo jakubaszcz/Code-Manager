@@ -10,49 +10,100 @@
 
 void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 
-    _keyboardEventCommand.clear();
+    // If the body don't exist return
+    if (!body) return;
 
-    auto *layout = qobject_cast<QVBoxLayout *>(body->layout());
-    if (!layout) {
-        layout = new QVBoxLayout(body);
-        layout->setContentsMargins(0, 0, 0, 0);
-        layout->setSpacing(0);
+    // Clear the keyboard event
+    {
+        _keyboardEventCommand.clear();
+        _currentKeyboardEventCommand = 0;
     }
 
-    QWidget *cmdWidget = new QWidget(body);
-    AddCommand(cmdWidget);
-
-    _commandTabAdd = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_A), cmdWidget);
-
-    QObject::connect(_commandTabAdd, &QShortcut::activated, cmdWidget, [this, cmdWidget]() {
-        QPushButton *btn = cmdWidget->findChild<QPushButton *>();
-        if (btn && btn->text() == "+") {
-            btn->click();
+    // If the body has no layout, create one
+    {
+        _commandGlobalLayout = qobject_cast<QVBoxLayout *>(body->layout());
+        if (!_commandGlobalLayout) {
+            _commandGlobalLayout = new QVBoxLayout(body);
+            _commandGlobalLayout->setContentsMargins(0, 0, 0, 0);
+            _commandGlobalLayout->setSpacing(0);
         }
-    });
-    layout->addWidget(cmdWidget);
+    }
 
-    _commandTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), cmdWidget);
-    _commandTabDown = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), cmdWidget);
-    _commandTabEnter = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), cmdWidget);
+    // Create command
+    CONST_CommmandAddButton();
 
-    QObject::connect(_commandTabUp, &QShortcut::activated, cmdWidget, [this]() {
+    // Create buttons
+    CONST_CommandButtonsBox();
+}
+
+
+void WorkflowGraphic::CONST_CommmandAddButton() {
+
+    {
+        if (_commandAddWidget) {
+            _commandAddWidget = nullptr;
+        }
+    }
+
+    // Create widget
+    _commandAddWidget = new QWidget(_commandGlobalLayout->parentWidget());
+
+    // Create add button
+    {
+        // Draw add command
+        AddCommand();
+
+        // Keyboard events
+        {
+            _commandShortcutAdd = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_A), _commandAddWidget);
+        }
+
+        // Connect keyboard events
+        {
+            QObject::connect(_commandShortcutAdd, &QShortcut::activated, _commandAddWidget, [this]() {
+               QPushButton *btn = _commandAddWidget->findChild<QPushButton *>();
+               if (btn && btn->text() == "+") {
+                   btn->click();
+               }
+           });
+        }
+
+        // Add button to global Layout
+        _commandGlobalLayout->addWidget(_commandAddWidget);
+    }
+}
+
+void WorkflowGraphic::CONST_CommandButtonsBox() {
+
+    if (_commandScrollArea) {
+        _commandScrollArea = nullptr;
+    }
+
+    _commandButtonBox = new QWidget();
+
+    _commandTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), _commandButtonBox);
+    _commandTabDown = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), _commandButtonBox);
+    _commandTabEnter = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), _commandButtonBox);
+
+    QObject::connect(_commandTabUp, &QShortcut::activated, _commandButtonBox, [this]() {
         _currentKeyboardEventCommand--;
         if (_currentKeyboardEventCommand < 0) _currentKeyboardEventCommand = _keyboardEventCommand.size() - 1;
+        std::cout << "Current : " << _currentKeyboardEventCommand << std::endl;
         RebuildBody();
     });
 
-    QObject::connect(_commandTabDown, &QShortcut::activated, cmdWidget, [this]() {
+    QObject::connect(_commandTabDown, &QShortcut::activated, _commandButtonBox, [this]() {
         _currentKeyboardEventCommand = (_currentKeyboardEventCommand + 1) % _keyboardEventCommand.size();
+        std::cout << "Current : " << _currentKeyboardEventCommand << std::endl;
         RebuildBody();
     });
 
-    auto *scroll = new QScrollArea(body);
-    scroll->setWidgetResizable(true);
-    scroll->setFrameShape(QFrame::NoFrame);
-    scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    _commandScrollArea = new QScrollArea(_commandButtonBox);
+    _commandScrollArea->setWidgetResizable(true);
+    _commandScrollArea->setFrameShape(QFrame::NoFrame);
+    _commandScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
-    scroll->setStyleSheet(R"(
+    _commandScrollArea->setStyleSheet(R"(
         QScrollBar:vertical {
             border: none;
             background: #1e1e1e;
@@ -71,9 +122,7 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
         }
     )");
 
-    layout->addWidget(scroll);
-
-    QWidget *bbox = new QWidget(scroll);
+    QWidget *bbox = new QWidget(_commandScrollArea);
     auto *boxLayout = new QVBoxLayout(bbox);
     boxLayout->setContentsMargins(0, 0, 0, 0);
     boxLayout->setSpacing(0);
@@ -91,7 +140,7 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
         }
     }
 
-    QObject::connect(_commandTabEnter, &QShortcut::activated, cmdWidget, [this]() {
+    QObject::connect(_commandTabEnter, &QShortcut::activated, _commandButtonBox, [this]() {
         QWidget *w = _keyboardEventCommand[_currentKeyboardEventCommand];
         if (w) {
             QPushButton *btn = w->findChild<QPushButton *>();
@@ -103,22 +152,25 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 
     boxLayout->addStretch();
 
-    scroll->setWidget(bbox);
+    _commandScrollArea->setWidget(bbox);
+    _commandGlobalLayout->addWidget(_commandScrollArea);
+    std::cout << "Size : " << _keyboardEventWorkflow.size() << std::endl;
+
 }
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-void WorkflowGraphic::AddCommand(QWidget *container) {
-    auto *v = qobject_cast<QVBoxLayout *>(container->layout());
+void WorkflowGraphic::AddCommand() {
+    auto *v = qobject_cast<QVBoxLayout *>(_commandAddWidget->layout());
     if (!v) {
-        v = new QVBoxLayout(container);
+        v = new QVBoxLayout(_commandAddWidget);
         v->setContentsMargins(0, 0, 0, 0);
         v->setSpacing(0);
     }
 
-    QWidget *row = new QWidget(container);
+    QWidget *row = new QWidget(_commandAddWidget);
     auto *h = new QHBoxLayout(row);
     h->setContentsMargins(8, 8, 8, 8);
     h->setSpacing(8);
@@ -133,10 +185,10 @@ void WorkflowGraphic::AddCommand(QWidget *container) {
             "QPushButton:focus { border: 1px solid #5a5a5a; }");
     h->addWidget(btnPlus, 0, Qt::AlignRight);
 
-    auto addAndRefresh = [container, this
+    auto addAndRefresh = [this
                           /*, this*/]() {
-        NamePopup popup(container); // parent QWidget*
-        popup.OpenNear(container); // ancre : le bouton +
+        NamePopup popup(_commandAddWidget); // parent QWidget*
+        popup.OpenNear(_commandAddWidget); // ancre : le bouton +
 
         _application->GetData()->AddCommand(popup.GetName());
         RebuildBody();
