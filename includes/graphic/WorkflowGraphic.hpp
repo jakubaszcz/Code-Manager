@@ -70,7 +70,7 @@ private:
     void DrawCommandTab(QWidget *);
     void AddCommand();
     QWidget *Command(const std::string&, int);
-    void CONST_CommmandAddButton();
+    void CONST_CommandAddButton();
     void CONST_CommandButtonsBox();
     void UPDT_CommandButton(int, int);
 

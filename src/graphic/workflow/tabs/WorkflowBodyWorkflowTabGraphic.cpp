@@ -28,6 +28,7 @@ void WorkflowGraphic::DrawWorkflowTab(QWidget *body) {
     // If the body has no layout, create one
     {
         _workflowGlobalLayout = qobject_cast<QVBoxLayout *>(body->layout());
+
         if (!_workflowGlobalLayout) {
             _workflowGlobalLayout = new QVBoxLayout(body);
             _workflowGlobalLayout->setContentsMargins(0, 0, 0, 0);
@@ -132,7 +133,7 @@ QWidget *WorkflowGraphic::TerminalRow(int id) {
         button->setProperty("workflow", "true");
         button->setProperty("active", (id == _currentKeyboardEventWorkflow) ? "true" : "false");
 
-        button->setAutoFillBackground(true); // ← Ajoute ça
+        button->setAutoFillBackground(true);
         button->setAttribute(Qt::WA_StyledBackground, true);
 
         button->style()->unpolish(button);
