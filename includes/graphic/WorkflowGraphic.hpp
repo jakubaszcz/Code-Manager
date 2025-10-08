@@ -21,6 +21,7 @@
 #include <QShortcut>
 #include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 #include "../application/Application.hpp"
 #include "IGraphic.hpp"
@@ -82,6 +83,7 @@ private:
     QShortcut *_commandTabUp = nullptr;
     QShortcut *_commandTabDown = nullptr;
     QShortcut *_commandTabEnter = nullptr;
+    QShortcut *_commandShortcutDelete = nullptr;
 
 
     void DrawHeader(QVBoxLayout *);

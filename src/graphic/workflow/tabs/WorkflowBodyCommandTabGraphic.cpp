@@ -310,6 +310,7 @@ void WorkflowGraphic::CONST_CommandButtonsBox() {
         _commandTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), _commandScrollArea);
         _commandTabDown = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), _commandScrollArea);
         _commandTabEnter = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), _commandScrollArea);
+        _commandShortcutDelete = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q), _commandScrollArea);
 
     }
 
@@ -329,11 +330,21 @@ void WorkflowGraphic::CONST_CommandButtonsBox() {
             UPDT_CommandButton(previous, _currentKeyboardEventCommand);
         });
 
+        QObject::connect(_commandShortcutDelete, &QShortcut::activated, _commandScrollArea, [this]() {
+            auto *widget = _keyboardEventCommand[_currentKeyboardEventCommand];
+            if (widget) {
+                QPushButton *removeBtn = widget->findChild<QPushButton *>("remove");
+                if (removeBtn)
+                    removeBtn->click();
+                RebuildBody();
+            }
+        });
+
         {
             QObject::connect(_commandTabEnter, &QShortcut::activated, _commandScrollArea, [this]() {
-               auto *w = _keyboardEventCommand[_currentKeyboardEventCommand];
-               if (w) {
-                   auto *button = w->findChild<QPushButton *>();
+               auto *widget = _keyboardEventCommand[_currentKeyboardEventCommand];
+               if (widget) {
+                   auto *button = widget->findChild<QPushButton *>();
                    if (button) {
                        button->click();
                    }
