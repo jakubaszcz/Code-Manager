@@ -1,0 +1,164 @@
+/* ────────────────────────────────────────────────
+   Button Run
+   ──────────────────────────────────────────────── */
+
+
+QPushButton[command="true"] {
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+QPushButton[command="true"]:hover {
+    background-color: #343434;
+}
+
+QPushButton[command="true"]:pressed {
+    background-color: #1b1b1b;
+}
+
+QPushButton[command="true"][active="true"] {
+    background-color: #007acc;
+    color: white;
+}
+
+QPushButton[command="true"][active="true"]:hover {
+    background-color: #2c2c2c;
+}
+
+QPushButton[command="true"][active="true"]:pressed {
+    background-color: #181818;
+}
+
+
+/* ────────────────────────────────────────────────
+   Bouton Remove
+   ──────────────────────────────────────────────── */
+
+
+QPushButton[remove="true"] {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-weight: 500;
+}
+
+QPushButton[remove="true"]:hover {
+    background-color: #2a2a2a;
+}
+
+QPushButton[remove="true"]:pressed {
+    background-color: #171717;
+}
+
+QPushButton[remove="true"]:focus {
+    border: 1px solid #5a5a5a;
+}
+
+
+/* ────────────────────────────────────────────────
+   ScrollArea
+   ──────────────────────────────────────────────── */
+
+
+QScrollArea {
+    background-color: #1e1e1e;
+    border: none;
+}
+
+QScrollBar:vertical {
+    border: none;
+    background: #1e1e1e;
+    width: 12px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #343434;
+    min-height: 20px;
+    border-radius: 4px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #1b1b1b;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+    background: none;
+    border: none;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+
+/* ────────────────────────────────────────────────
+   Input Field
+   ──────────────────────────────────────────────── */
+
+
+QLineEdit[input="true"] {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 13px;
+    selection-background-color: #555555;
+    selection-color: white;
+}
+
+QLineEdit[input="true"]:focus {
+    border: 1px solid #5a5a5a;
+    background-color: #232323;
+}
+
+QLineEdit[input="true"]::placeholder {
+    color: #888888;
+}
+
+QLineEdit[input="true"]:disabled {
+    color: #666666;
+    background-color: #161616;
+    border: 1px solid #2a2a2a;
+}
+
+
+/* ────────────────────────────────────────────────
+   Add
+   ──────────────────────────────────────────────── */
+
+QPushButton[add="true"] {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+QPushButton[add="true"]:hover {
+    background-color: #2a2a2a;
+}
+
+QPushButton[add="true"]:pressed {
+    background-color: #171717;
+}
+
+QPushButton[add="true"]:focus {
+    border: 1px solid #5a5a5a;
+}
+
+
+

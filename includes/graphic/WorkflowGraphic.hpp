@@ -16,6 +16,7 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QScrollArea>
+#include <QStyle>
 #include <QWidget>
 #include <QShortcut>
 #include <functional>

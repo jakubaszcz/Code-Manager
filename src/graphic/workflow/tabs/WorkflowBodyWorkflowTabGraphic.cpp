@@ -6,8 +6,8 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QStyle>
 #include <QDebug>
+#include <QStyle>
 #include "../../../../includes/graphic/WorkflowGraphic.hpp"
 
 
@@ -209,7 +209,6 @@ void WorkflowGraphic::CONST_WorkflowButtonsBox() {
 
     // Keyboard events
     {
-
         _workflowTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), _workflowButtonBox);
         _workflowTabDown = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), _workflowButtonBox);
         _workflowTabEnter= new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), _workflowButtonBox);
@@ -217,6 +216,7 @@ void WorkflowGraphic::CONST_WorkflowButtonsBox() {
 
     // Create vertical box layout
     auto *boxLayout = new QVBoxLayout(_workflowButtonBox);
+
 
     // Connect keyboard events
     {

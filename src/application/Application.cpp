@@ -90,12 +90,24 @@ int Application::Run(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
 
-    QFile styleFile(":/styles/main/WorkflowTab.qss");
+    QStringList qssFiles = {
+        ":/styles/main/WorkflowTab.qss",
+        ":/styles/main/CommandTab.qss",
+    };
 
-    if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
-        QString qss = styleFile.readAll();
-        app.setStyleSheet(qss);
+    QString mergedQss;
+
+    for (const QString &path : qssFiles) {
+        QFile file(path);
+        if (file.open(QFile::ReadOnly | QFile::Text)) {
+            mergedQss += "\n/* " + path + " */\n" + file.readAll() + "\n";
+            file.close();
+        } else {
+            return 1;
+        }
     }
+
+    app.setStyleSheet(mergedQss);
 
     _software->Draw();
 

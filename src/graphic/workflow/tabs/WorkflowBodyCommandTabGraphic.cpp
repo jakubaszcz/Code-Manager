@@ -109,11 +109,19 @@ void WorkflowGraphic::AddCommand() {
     auto *button = new QPushButton(title, widget);
     button->setCursor(Qt::PointingHandCursor);
     button->setFixedSize(32, 32);
-    button->setStyleSheet(
-            "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
-            "QPushButton:hover { background-color: #2a2a2a; }"
-            "QPushButton:pressed { background-color: #171717; }"
-            "QPushButton:focus { border: 1px solid #5a5a5a; }");
+
+    // Style
+    button->setObjectName("add");
+    button->setProperty("add", "true");
+
+    button->setFocusPolicy(Qt::NoFocus);
+    button->setAutoFillBackground(true);
+    button->setAttribute(Qt::WA_StyledBackground, true);
+
+    button->style()->unpolish(button);
+    button->style()->polish(button);
+    button->update();
+
     wLayout->addWidget(button, 0, Qt::AlignRight);
 
     // Event
@@ -142,7 +150,6 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
     // Create widget
     auto *widget = new QWidget;
     widget->setFocusPolicy(Qt::StrongFocus);
-    widget->setStyleSheet("QWidget { background-color: #2a2a2a; }");
 
     // Create layout
     auto *layout = new QHBoxLayout(widget);
@@ -157,17 +164,18 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
     button_execute->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     button_execute->setMinimumWidth(0);
     button_execute->setFlat(true);
-    if (id == _currentKeyboardEventCommand) {
-        button_execute->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #1b1b1b; "
-                       "color: white; }"
-                       "QPushButton:hover { background-color: #343434; }"
-                       "QPushButton:pressed { background-color: #1b1b1b; }");
-    } else {
-        button_execute->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #2a2a2a; "
-               "color: white; }"
-               "QPushButton:hover { background-color: #343434; }"
-               "QPushButton:pressed { background-color: #1b1b1b; }");
-    }
+
+    button_execute->setObjectName("command");
+    button_execute->setProperty("command", "true");
+    button_execute->setProperty("active", (id == _currentKeyboardEventCommand) ? "true" : "false");
+
+    button_execute->setFocusPolicy(Qt::NoFocus);
+    button_execute->setAutoFillBackground(true);
+    button_execute->setAttribute(Qt::WA_StyledBackground, true);
+
+    button_execute->style()->unpolish(button_execute);
+    button_execute->style()->polish(button_execute);
+    button_execute->update();
 
     // Create line
     auto *input = new QLineEdit(widget);
@@ -178,20 +186,34 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
         input->setPlaceholderText(QString::fromStdString(customCmd.empty() ? "Enter custom command." : customCmd));
     }
     input->setClearButtonEnabled(true);
-    input->setFixedWidth(240);
-    input->setStyleSheet("QLineEdit { background: #1e1e1e; color: white; border: 1px solid #3a3a3a; padding: 6px 8px; }"
-                         "QLineEdit:focus { border: 1px solid #5a5a5a; }");
+    input->setObjectName("input");
+    input->setProperty("input", "true");
+
+    input->setFocusPolicy(Qt::StrongFocus);
+    input->setAutoFillBackground(true);
+    input->setAttribute(Qt::WA_StyledBackground, true);
+
+    // Force Qt à recharger le style
+    input->style()->unpolish(input);
+    input->style()->polish(input);
+    input->update();
 
     // Create button
     auto *button_remove = new QPushButton("-", widget);
     button_remove->setCursor(Qt::PointingHandCursor);
     button_remove->setFixedSize(32, 32);
-    button_remove->setToolTip("Remove this command");
-    button_remove->setStyleSheet(
-            "QPushButton { background-color: #1e1e1e; color: white; border: 1px solid #3a3a3a; border-radius: 4px; }"
-            "QPushButton:hover { background-color: #2a2a2a; }"
-            "QPushButton:pressed { background-color: #171717; }"
-            "QPushButton:focus { border: 1px solid #5a5a5a; }");
+
+    button_remove->setObjectName("remove");
+    button_remove->setProperty("remove", "true");
+
+    button_remove->setFocusPolicy(Qt::NoFocus);
+    button_remove->setAutoFillBackground(true);
+    button_remove->setAttribute(Qt::WA_StyledBackground, true);
+
+    button_remove->style()->unpolish(button_remove);
+    button_remove->style()->polish(button_remove);
+    button_remove->update();
+
 
     // Add layout
     layout->addWidget(button_execute, 1);
@@ -243,7 +265,7 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
     return widget;
 }
 
-m
+
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
@@ -263,28 +285,52 @@ void WorkflowGraphic::CONST_CommandButtonsBox() {
     // Create button box
     _commandButtonBox = new QWidget();
 
+    // Create scroll area
+    {
+        _commandScrollArea = new QScrollArea(_commandButtonBox);
+
+        // Style
+        _commandScrollArea->setWidgetResizable(true);
+        _commandScrollArea->setFrameShape(QFrame::NoFrame);
+        _commandScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+
+        _commandScrollArea->setObjectName("scroll");
+        _commandScrollArea->setProperty("scroll", "true");
+
+        _commandScrollArea->setAutoFillBackground(true);
+        _commandScrollArea->setAttribute(Qt::WA_StyledBackground, true);
+
+        _commandScrollArea->style()->unpolish(_commandScrollArea);
+        _commandScrollArea->style()->polish(_commandScrollArea);
+        _commandScrollArea->update();
+    }
+
     // Keyboard events
     {
-        _commandTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), _commandButtonBox);
-        _commandTabDown = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), _commandButtonBox);
-        _commandTabEnter = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), _commandButtonBox);
+        _commandTabUp = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Up), _commandScrollArea);
+        _commandTabDown = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Down), _commandScrollArea);
+        _commandTabEnter = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), _commandScrollArea);
+
     }
+
 
     // Connect keyboard events
     {
-        QObject::connect(_commandTabUp, &QShortcut::activated, _commandButtonBox, [this]() {
+        QObject::connect(_commandTabUp, &QShortcut::activated, _commandScrollArea, [this]() {
+            int previous = _currentKeyboardEventCommand;
            _currentKeyboardEventCommand--;
            if (_currentKeyboardEventCommand < 0) _currentKeyboardEventCommand = _keyboardEventCommand.size() - 1;
-           RebuildBody();
+           UPDT_CommandButton(previous, _currentKeyboardEventCommand);
        });
 
-        QObject::connect(_commandTabDown, &QShortcut::activated, _commandButtonBox, [this]() {
+        QObject::connect(_commandTabDown, &QShortcut::activated, _commandScrollArea, [this]() {
+            int previous = _currentKeyboardEventCommand;
             _currentKeyboardEventCommand = (_currentKeyboardEventCommand + 1) % _keyboardEventCommand.size();
-            RebuildBody();
+            UPDT_CommandButton(previous, _currentKeyboardEventCommand);
         });
 
         {
-            QObject::connect(_commandTabEnter, &QShortcut::activated, _commandButtonBox, [this]() {
+            QObject::connect(_commandTabEnter, &QShortcut::activated, _commandScrollArea, [this]() {
                auto *w = _keyboardEventCommand[_currentKeyboardEventCommand];
                if (w) {
                    auto *button = w->findChild<QPushButton *>();
@@ -294,33 +340,6 @@ void WorkflowGraphic::CONST_CommandButtonsBox() {
                }
            });
         }
-    }
-
-    // Create scroll area
-    {
-        _commandScrollArea = new QScrollArea(_commandButtonBox);
-        _commandScrollArea->setWidgetResizable(true);
-        _commandScrollArea->setFrameShape(QFrame::NoFrame);
-        _commandScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
-        _commandScrollArea->setStyleSheet(R"(
-        QScrollBar:vertical {
-            border: none;
-            background: #1e1e1e;
-            width: 12px;
-            margin: 0px;
-        }
-        QScrollBar::handle:vertical {
-            background: #343434;
-            min-height: 20px;
-        }
-        QScrollBar::handle:vertical:hover {
-            background: #1b1b1b;
-        }
-        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
-            height: 0px;
-        }
-        )");
     }
 
     // Create widget and layout
@@ -350,5 +369,39 @@ void WorkflowGraphic::CONST_CommandButtonsBox() {
         layout->addStretch();
         _commandScrollArea->setWidget(widget);
         _commandGlobalLayout->addWidget(_commandScrollArea);
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+void WorkflowGraphic::UPDT_CommandButton(int previous, int current) {
+
+    /*
+     * Update Buttons
+     * Fetch the previous button
+     * Fetch the current button
+     * Swap them
+     */
+
+    // Set the previous to false
+    if (previous >= 0 && previous < static_cast<int>(_keyboardEventCommand.size())) {
+        if (auto btn = _keyboardEventCommand[previous]->findChild<QPushButton*>()) {
+            btn->setProperty("active", "false");
+            btn->style()->unpolish(btn);
+            btn->style()->polish(btn);
+            btn->update();
+        }
+    }
+
+    // Set the current to true
+    if (current >= 0 && current < static_cast<int>(_keyboardEventCommand.size())) {
+        if (auto btn = _keyboardEventCommand[current]->findChild<QPushButton*>()) {
+            btn->setProperty("active", "true");
+            btn->style()->unpolish(btn);
+            btn->style()->polish(btn);
+            btn->update();
+        }
     }
 }

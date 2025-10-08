@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>styles/main/WorkflowTab.qss</file>
+        <file>styles/main/CommandTab.qss</file>
     </qresource>
 </RCC>
