@@ -40,6 +40,9 @@ void WorkflowGraphic::DrawCommandTab(QWidget *body) {
 }
 
 
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 void WorkflowGraphic::CONST_CommandAddButton() {
 
     // Destroy widget if already exist
@@ -111,17 +114,20 @@ void WorkflowGraphic::AddCommand() {
     button->setFixedSize(32, 32);
 
     // Style
-    button->setObjectName("add");
-    button->setProperty("add", "true");
+    {
+        button->setObjectName("add");
+        button->setProperty("add", "true");
 
-    button->setFocusPolicy(Qt::NoFocus);
-    button->setAutoFillBackground(true);
-    button->setAttribute(Qt::WA_StyledBackground, true);
+        button->setFocusPolicy(Qt::NoFocus);
+        button->setAutoFillBackground(true);
+        button->setAttribute(Qt::WA_StyledBackground, true);
 
-    button->style()->unpolish(button);
-    button->style()->polish(button);
-    button->update();
+        button->style()->unpolish(button);
+        button->style()->polish(button);
+        button->update();
+    }
 
+    // Add button to layout
     wLayout->addWidget(button, 0, Qt::AlignRight);
 
     // Event
@@ -165,17 +171,20 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
     button_execute->setMinimumWidth(0);
     button_execute->setFlat(true);
 
-    button_execute->setObjectName("command");
-    button_execute->setProperty("command", "true");
-    button_execute->setProperty("active", (id == _currentKeyboardEventCommand) ? "true" : "false");
+    // Style
+    {
+        button_execute->setObjectName("command");
+        button_execute->setProperty("command", "true");
+        button_execute->setProperty("active", (id == _currentKeyboardEventCommand) ? "true" : "false");
 
-    button_execute->setFocusPolicy(Qt::NoFocus);
-    button_execute->setAutoFillBackground(true);
-    button_execute->setAttribute(Qt::WA_StyledBackground, true);
+        button_execute->setFocusPolicy(Qt::NoFocus);
+        button_execute->setAutoFillBackground(true);
+        button_execute->setAttribute(Qt::WA_StyledBackground, true);
 
-    button_execute->style()->unpolish(button_execute);
-    button_execute->style()->polish(button_execute);
-    button_execute->update();
+        button_execute->style()->unpolish(button_execute);
+        button_execute->style()->polish(button_execute);
+        button_execute->update();
+    }
 
     // Create line
     auto *input = new QLineEdit(widget);
@@ -186,33 +195,39 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
         input->setPlaceholderText(QString::fromStdString(customCmd.empty() ? "Enter custom command." : customCmd));
     }
     input->setClearButtonEnabled(true);
-    input->setObjectName("input");
-    input->setProperty("input", "true");
 
-    input->setFocusPolicy(Qt::StrongFocus);
-    input->setAutoFillBackground(true);
-    input->setAttribute(Qt::WA_StyledBackground, true);
+    // Style
+    {
+        input->setObjectName("input");
+        input->setProperty("input", "true");
 
-    // Force Qt à recharger le style
-    input->style()->unpolish(input);
-    input->style()->polish(input);
-    input->update();
+        input->setFocusPolicy(Qt::StrongFocus);
+        input->setAutoFillBackground(true);
+        input->setAttribute(Qt::WA_StyledBackground, true);
+
+        input->style()->unpolish(input);
+        input->style()->polish(input);
+        input->update();
+    }
 
     // Create button
     auto *button_remove = new QPushButton("-", widget);
     button_remove->setCursor(Qt::PointingHandCursor);
     button_remove->setFixedSize(32, 32);
 
-    button_remove->setObjectName("remove");
-    button_remove->setProperty("remove", "true");
+    // Style
+    {
+        button_remove->setObjectName("remove");
+        button_remove->setProperty("remove", "true");
 
-    button_remove->setFocusPolicy(Qt::NoFocus);
-    button_remove->setAutoFillBackground(true);
-    button_remove->setAttribute(Qt::WA_StyledBackground, true);
+        button_remove->setFocusPolicy(Qt::NoFocus);
+        button_remove->setAutoFillBackground(true);
+        button_remove->setAttribute(Qt::WA_StyledBackground, true);
 
-    button_remove->style()->unpolish(button_remove);
-    button_remove->style()->polish(button_remove);
-    button_remove->update();
+        button_remove->style()->unpolish(button_remove);
+        button_remove->style()->polish(button_remove);
+        button_remove->update();
+    }
 
 
     // Add layout
@@ -248,8 +263,8 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
                 QDir::setCurrent(newDir);
 
             auto* terminal = new TerminalPopup(widget);
-    terminal->show();
-    terminal->StartCommand(command, {});
+            terminal->show();
+            terminal->StartCommand(command, {});
             terminal->Draw();
 
             QDir::setCurrent(oldDir);
