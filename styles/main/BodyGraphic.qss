@@ -1,0 +1,33 @@
+QPushButton[tab="true"] {
+    background: #1e1e1e !important;
+    border: 1px solid #1e1e1e;
+    border-radius: 0px;
+    padding: 8px 12px;
+    color: white;
+    text-align: center;
+}
+
+/* Hover */
+QPushButton[tab="true"]:hover {
+    background: #343434 !important;
+    border: 1px solid #343434;
+}
+
+/* Pressed */
+QPushButton[tab="true"]:pressed {
+    background: #1b1b1b !important;
+    border: 1px solid #1b1b1b;
+}
+
+/* Actif */
+QPushButton[tab="true"][active="true"] {
+    background: #007acc;
+    border: 1px solid #007acc;
+    color: white;
+}
+
+/* Focus (supprime cadre rouge) */
+QPushButton[tab="true"]:focus {
+    outline: none;
+    border: 1px solid transparent;
+}

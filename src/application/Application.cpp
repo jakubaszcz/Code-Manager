@@ -93,6 +93,7 @@ int Application::Run(int argc, char *argv[]) {
     QStringList qssFiles = {
         ":/styles/main/WorkflowTab.qss",
         ":/styles/main/CommandTab.qss",
+        ":/styles/main/BodyGraphic.qss",
     };
 
     QString mergedQss;

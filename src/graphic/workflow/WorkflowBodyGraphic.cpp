@@ -96,25 +96,24 @@ void WorkflowGraphic::DrawTabs(QWidget *body) {
 
 
 QPushButton *WorkflowGraphic::Tabs(const std::string& label, std::function<void()> onClick, Tab tab) {
-    auto *btn = new QPushButton(QString::fromStdString(label));
-    btn->setCursor(Qt::PointingHandCursor);
-    btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    btn->setMinimumWidth(0);
-    btn->setFlat(true);
-    btn->setFocusPolicy(Qt::NoFocus);
+    auto *button = new QPushButton(QString::fromStdString(label));
+    button->setCursor(Qt::PointingHandCursor);
+    button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    button->setMinimumWidth(0);
+    button->setFlat(true);
+    button->setFocusPolicy(Qt::NoFocus);
 
-    if (tab == _tab) {
-        btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #1b1b1b; "
-                   "color: white; }"
-                   "QPushButton:hover { background-color: #343434; }"
-                   "QPushButton:pressed { background-color: #1b1b1b; }");
-    } else {
-        btn->setStyleSheet("QPushButton { border: none; border-radius: 0px; padding: 8px 12px; background-color: #2a2a2a; "
-                       "color: white; }"
-                       "QPushButton:hover { background-color: #343434; }"
-                       "QPushButton:pressed { background-color: #1b1b1b; }");
-    }
+    button->setObjectName("tab");
+    button->setProperty("tab", "true");
+    button->setProperty("active", (tab == _tab) ? "true" : "false");
 
-    QObject::connect(btn, &QPushButton::clicked, btn, [onClick]() { onClick(); });
-    return btn;
+    button->setAutoFillBackground(true);
+    button->setAttribute(Qt::WA_StyledBackground, true);
+
+    button->style()->unpolish(button);
+    button->style()->polish(button);
+    button->update();
+
+    QObject::connect(button, &QPushButton::clicked, button, [onClick]() { onClick(); });
+    return button;
 }
