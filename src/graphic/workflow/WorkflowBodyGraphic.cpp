@@ -13,35 +13,38 @@
 
 
 void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
+
+    // Return if no layout
+    if (!layout) return;
+
+    // Create layout
     if (_layout == nullptr) {
-        QWidget *body = new QWidget;
+        auto *body = new QWidget;
         _layout = new QVBoxLayout(body);
         _layout->setContentsMargins(0, 0, 0, 0);
         _layout->setSpacing(0);
         layout->addWidget(body);
     }
 
-    _tabsWindow = {{Tab::Workflow,
-                    [this]() {
-                        if (_layout && _layout->parentWidget()) {
-                            this->DrawWorkflowTab(_layout->parentWidget());
-                        }
-                    }},
-                   {Tab::Command,
-                    [this]() {
-                        if (_layout && _layout->parentWidget()) {
-                            this->DrawCommandTab(_layout->parentWidget());
-                        }
-                    }},
-                   // {Tab::Application, [this]() {
-                   //      if (_layout && _layout->parentWidget()) {
-                   //          this->DrawApplicationTab(_layout->parentWidget());
-                   //      }
-                   //  }}
-                    };
+    // Draw tabs
+    {
+        _tabsWindow = {
+            {Tab::Workflow,
+            [this]() {
+                if (_layout && _layout->parentWidget()) {
+                    this->DrawWorkflowTab(_layout->parentWidget());
+                }
+            }},
+           {Tab::Command,
+            [this]() {
+                if (_layout && _layout->parentWidget()) {
+                    this->DrawCommandTab(_layout->parentWidget());
+                }
+           }}
+        };
+    }
 
-
-
+    // Rebuild the body
     RebuildBody();
 }
 
@@ -50,45 +53,55 @@ void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
 
 
 void WorkflowGraphic::DrawTabs(QWidget *body) {
+
+    // Create layout
     auto *layout = qobject_cast<QVBoxLayout *>(body->layout());
 
+    // Create button event
     std::vector<std::pair<std::string, std::function<void()>>> buttonsEvent = {
             {"Workflow", [this]() { SetTab(Tab::Workflow); }},
             {"Command", [this]() { SetTab(Tab::Command); }},
             //{"Application", [this]() { SetTab(Tab::Application); }}
     };
 
+    // Create widget
+    auto *widget = new QWidget;
 
-    QWidget *tabsWidget = new QWidget;
-    auto *h = new QHBoxLayout(tabsWidget);
-    h->setContentsMargins(0, 0, 0, 0);
-    h->setSpacing(0);
+    // Create layout
+    auto *boxLayout = new QHBoxLayout(widget);
+    boxLayout->setContentsMargins(0, 0, 0, 0);
+    boxLayout->setSpacing(0);
 
+    // Draw tabs
     for (int i = 0; i < static_cast<int>(_keyboardEventTab.size()); ++i) {
         const auto& tab = _keyboardEventTab[i];
         const auto& [name, event] = buttonsEvent[i];
 
-        QPushButton *btn = Tabs(name, event, tab);
-        h->addWidget(btn, 1);
+        auto *button = Tabs(name, event, tab);
+        boxLayout->addWidget(button, 1);
     }
 
+    // Keybinds
+    auto *right = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Right), widget);
+    auto *left = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Left), widget);
 
-    auto *right = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Right), tabsWidget);
-    auto *left = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Left), tabsWidget);
-
-    QObject::connect(right, &QShortcut::activated, tabsWidget, [this]() {
+    // Event
+    QObject::connect(right, &QShortcut::activated, widget, [this]() {
         _currentKeyboardEventTab = (_currentKeyboardEventTab + 1) % _keyboardEventTab.size();
         SetTab(_keyboardEventTab[_currentKeyboardEventTab]);
     });
 
-    QObject::connect(left, &QShortcut::activated, tabsWidget, [this]() {
+    QObject::connect(left, &QShortcut::activated, widget, [this]() {
         _currentKeyboardEventTab--;
         if (_currentKeyboardEventTab < 0) _currentKeyboardEventTab = _keyboardEventTab.size() - 1;
         SetTab(_keyboardEventTab[_currentKeyboardEventTab]);
     });
 
-    tabsWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    layout->addWidget(tabsWidget);
+    // Set size policy
+    widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    // Add widget
+    layout->addWidget(widget);
 }
 
 
@@ -96,13 +109,16 @@ void WorkflowGraphic::DrawTabs(QWidget *body) {
 
 
 QPushButton *WorkflowGraphic::Tabs(const std::string& label, std::function<void()> onClick, Tab tab) {
+    // Create button
     auto *button = new QPushButton(QString::fromStdString(label));
+
     button->setCursor(Qt::PointingHandCursor);
     button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     button->setMinimumWidth(0);
     button->setFlat(true);
     button->setFocusPolicy(Qt::NoFocus);
 
+    // Style
     button->setObjectName("tab");
     button->setProperty("tab", "true");
     button->setProperty("active", (tab == _tab) ? "true" : "false");
@@ -114,6 +130,9 @@ QPushButton *WorkflowGraphic::Tabs(const std::string& label, std::function<void(
     button->style()->polish(button);
     button->update();
 
+    // Event
     QObject::connect(button, &QPushButton::clicked, button, [onClick]() { onClick(); });
+
+    // Return
     return button;
 }
