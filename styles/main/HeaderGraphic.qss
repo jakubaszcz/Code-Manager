@@ -1,0 +1,3 @@
+QPushButton[header-graphic-button-open-directory="true"] {
+    border: none;
+}

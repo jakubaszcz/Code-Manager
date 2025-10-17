@@ -108,5 +108,7 @@ private:
     QVBoxLayout *_layout{nullptr};
     QWidget *_commandBox{nullptr};
 
+    void CloseWindowHeader();
+
 };
 

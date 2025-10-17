@@ -13,61 +13,84 @@
 
 
 void WorkflowGraphic::DrawHeader(QVBoxLayout *layout) {
-    QWidget *header = new QWidget();
-    header->setFixedHeight(40);
 
-    QHBoxLayout *mainHeaderLayout = new QHBoxLayout(header);
-    mainHeaderLayout->setContentsMargins(0, 0, 0, 0);
-    mainHeaderLayout->setSpacing(0);
+    // Create widget
+    auto *widget = new QWidget();
+    widget->setFixedHeight(40);
 
-    QPushButton *headerBox = new QPushButton();
-    headerBox->setFixedHeight(40);
-    headerBox->setFlat(true);
-    headerBox->setFocusPolicy(Qt::NoFocus);
+    // Add widget to layout
+    layout->addWidget(widget);
 
-    headerBox->setStyleSheet(R"(
-            QPushButton {
-                border: none;
-            }
-        )");
+    // Add header layout
+    auto *headerLayout = new QHBoxLayout(widget);
+    headerLayout->setContentsMargins(0, 0, 0, 0);
+    headerLayout->setSpacing(0);
 
-    auto *tab = new QShortcut(QKeySequence(Qt::Key_Tab), header);
+    // Add button
+    auto *button = new QPushButton();
+    button->setFixedHeight(40);
+    button->setFlat(true);
 
+    // Styling the button
+    {
+        button->setFocusPolicy(Qt::NoFocus);
 
-    QHBoxLayout *headerLayout = new QHBoxLayout(headerBox);
-    headerLayout->setContentsMargins(10, 5, 10, 5);
-    headerLayout->setSpacing(10);
+        button->setObjectName("header-graphic-button-open-directory");
+        button->setProperty("header-graphic-button-open-directory", "true");
 
-    QLabel *labelIcon = new QLabel("📁");
+        button->setAutoFillBackground(true);
+        button->setAttribute(Qt::WA_StyledBackground, true);
 
-    std::string wpath = _application->GetData()->GetConfigMap()["wpath"];
-    QString text =
-            wpath.empty() ? "No working directory provided. Click here to choose one." : QString::fromStdString(wpath);
-    QLabel *labelDirectory = new QLabel(text);
+        button->style()->unpolish(button);
+        button->style()->polish(button);
+        button->update();
+    }
+
+    // Setup key events
+    auto *shortcutTab = new QShortcut(QKeySequence(Qt::Key_Tab), widget);
 
     // Event
     {
-
-        QObject::connect(tab, &QShortcut::activated, header, [headerBox]() {
-            if (headerBox->isEnabled() && headerBox->isVisible())
-                headerBox->click();
-        });
-
-        QObject::connect(headerBox, &QPushButton::clicked, [=]() {
-            QString dir = QFileDialog::getExistingDirectory(header, "Pick a working directory.");
-            if (!dir.isEmpty()) {
-                _application->GetData()->ChangeConfig("wpath", dir.toStdString());
-                labelDirectory->setText(dir);
-            }
-        });
+        QObject::connect(shortcutTab, &QShortcut::activated, widget, [button]() {
+       if (button->isEnabled() && button->isVisible())
+           button->click();
+       });
     }
 
-    headerLayout->addStretch();
-    headerLayout->addWidget(labelIcon);
-    headerLayout->addWidget(labelDirectory);
-    headerLayout->addStretch();
+    // Create header button layout
+    auto *headerButtonLayout = new QHBoxLayout(button);
+    headerButtonLayout->setContentsMargins(10, 5, 10, 5);
+    headerButtonLayout->setSpacing(10);
 
-    mainHeaderLayout->addWidget(headerBox);
+    auto iconText = "📁";
 
-    layout->addWidget(header);
+    auto *iconLabel = new QLabel(iconText);
+
+    std::string wpath = _application->GetData()->GetConfigMap()["wpath"];
+
+    auto text = wpath.empty()
+        ? "No working directory provided. Click here to choose one."
+        : QString::fromStdString(wpath);
+
+    auto *labelDirectory = new QLabel(text);
+
+    // Event
+    {
+        QObject::connect(button, &QPushButton::clicked, iconLabel, [=]() {
+           auto dir = QFileDialog::getExistingDirectory(widget, "Pick a working directory.");
+           if (!dir.isEmpty()) {
+               _application->GetData()->ChangeConfig("wpath", dir.toStdString());
+               labelDirectory->setText(dir);
+           }
+       });
+    }
+
+    // Add widgets to layout
+    headerButtonLayout->addStretch();
+    headerButtonLayout->addWidget(iconLabel);
+    headerButtonLayout->addWidget(labelDirectory);
+    headerButtonLayout->addStretch();
+
+    // add widget to header
+    headerLayout->addWidget(button);
 }

@@ -3,5 +3,6 @@
         <file>styles/main/WorkflowTab.qss</file>
         <file>styles/main/CommandTab.qss</file>
         <file>styles/main/BodyGraphic.qss</file>
+        <file>styles/main/HeaderGraphic.qss</file>
     </qresource>
 </RCC>

@@ -94,6 +94,7 @@ int Application::Run(int argc, char *argv[]) {
         ":/styles/main/WorkflowTab.qss",
         ":/styles/main/CommandTab.qss",
         ":/styles/main/BodyGraphic.qss",
+        ":/styles/main/HeaderGraphic.qss",
     };
 
     QString mergedQss;
