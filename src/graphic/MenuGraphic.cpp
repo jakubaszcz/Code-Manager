@@ -15,14 +15,57 @@ MenuGraphic::MenuGraphic(std::shared_ptr<Application> application) : IGraphic<QV
 
 void MenuGraphic::Draw(QVBoxLayout *layout) {
 
-    _buttons.clear();
-    _currentButton = 0;
+    // Reset
+    {
+        _buttons.clear();
+        _currentButton = 0;
+    }
 
-    if (QPushButton *pb = WorkflowButton())
+    std::cout << _currentButton << std::endl;
+
+    QWidget *parentWidget = layout->parentWidget();
+
+    {
+        _menuGraphicShortcutLeft = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Left), parentWidget);
+        _menuGraphicShortcutRight = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Right), parentWidget);
+        _menuGraphicShortcutEnter = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return), parentWidget);
+    }
+
+    if (!_menuGraphicShortcutLeft && !_menuGraphicShortcutRight) std::cout << "Shortcuts not created" << std::endl;
+
+    {
+        QObject::connect(_menuGraphicShortcutLeft, &QShortcut::activated, parentWidget, [this]() {
+            int previous = _currentButton;
+            _currentButton--;
+            if (_currentButton < 0) _currentButton = _buttons.size() - 1;
+
+            UPDT_MenuButton(previous, _currentButton);
+        });
+
+        QObject::connect(_menuGraphicShortcutRight, &QShortcut::activated, parentWidget, [this]() {
+            int previous = _currentButton;
+            _currentButton = (_currentButton + 1) % _buttons.size();
+
+
+            UPDT_MenuButton(previous, _currentButton);
+        });
+
+        {
+            QObject::connect(_menuGraphicShortcutEnter, &QShortcut::activated, parentWidget, [this]() {
+                std::cout << "Enter" << std::endl;
+                QPushButton *button = _buttons[_currentButton];
+                if (button) {
+                    button->click();
+                }
+            });
+        }
+    }
+
+    if (QPushButton *pb = WorkflowButton(0))
         _buttons.push_back(pb);
-    if (QPushButton *pb = SettingButton())
+    if (QPushButton *pb = SettingButton(1))
         _buttons.push_back(pb);
-    if (QPushButton *pb = ExitButton())
+    if (QPushButton *pb = ExitButton(2))
         _buttons.push_back(pb);
 
     QVBoxLayout *centerColumn = new QVBoxLayout();
@@ -48,25 +91,31 @@ void MenuGraphic::Draw(QVBoxLayout *layout) {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QPushButton *MenuGraphic::WorkflowButton() {
+QPushButton *MenuGraphic::WorkflowButton(int id) {
+    std::cout << "CID =" << _currentButton << std::endl;
+    std::cout << "ID =" << id << std::endl;
+
     QPushButton *workflowButton = new QPushButton("🖥️");
 
     workflowButton->setCursor(Qt::PointingHandCursor);
     workflowButton->setFocusPolicy(Qt::StrongFocus);
-    workflowButton->setFixedSize(96, 96); // taille via API Qt
+    workflowButton->setFixedSize(96, 96);
 
-    workflowButton->setStyleSheet("QPushButton {"
-                                  "  border: none;"
-                                  "  font-size:36px;"
-                                  "  color:#ffffff;"
-                                  "  background:#2E2E2E;"
-                                  "}"
-                                  "QPushButton:hover { background:#4a4a4a; }"
-                                  "QPushButton:pressed { background:#2f2f2f; }"
-                                  "QPushButton:focus {"
-                                  "  background:#3a3a3a;"
-                                  "  outline: none;"
-                                  "}");
+    {
+        workflowButton->setFocusPolicy(Qt::NoFocus);
+
+        workflowButton->setObjectName("menu-button");
+        workflowButton->setProperty("menu-button", "true");
+        workflowButton->setProperty("active", (id == _currentButton) ? "true" : "false");
+
+
+        workflowButton->setAutoFillBackground(true);
+        workflowButton->setAttribute(Qt::WA_StyledBackground, true);
+
+        workflowButton->style()->unpolish(workflowButton);
+        workflowButton->style()->polish(workflowButton);
+        workflowButton->update();
+    }
 
     // Event
     {
@@ -84,25 +133,27 @@ QPushButton *MenuGraphic::WorkflowButton() {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QPushButton *MenuGraphic::SettingButton() {
+QPushButton *MenuGraphic::SettingButton(int id) {
     QPushButton *settingButton = new QPushButton("🛠️");
 
     settingButton->setCursor(Qt::PointingHandCursor);
     settingButton->setFocusPolicy(Qt::StrongFocus);
     settingButton->setFixedSize(96, 96);
 
-    settingButton->setStyleSheet("QPushButton {"
-                                 "  border: none;"
-                                 "  font-size:36px;"
-                                 "  color:#ffffff;"
-                                 "  background:#2E2E2E;"
-                                 "}"
-                                 "QPushButton:hover { background:#4a4a4a; }"
-                                 "QPushButton:pressed { background:#2f2f2f; }"
-                                 "QPushButton:focus {"
-                                 "  background:#3a3a3a;"
-                                 "  outline: none;"
-                                 "}");
+    {
+        settingButton->setFocusPolicy(Qt::NoFocus);
+
+        settingButton->setObjectName("menu-button");
+        settingButton->setProperty("menu-button", "true");
+        settingButton->setProperty("active", (id == _currentButton) ? "true" : "false");
+
+        settingButton->setAutoFillBackground(true);
+        settingButton->setAttribute(Qt::WA_StyledBackground, true);
+
+        settingButton->style()->unpolish(settingButton);
+        settingButton->style()->polish(settingButton);
+        settingButton->update();
+    }
 
     // Event
     {
@@ -120,25 +171,27 @@ QPushButton *MenuGraphic::SettingButton() {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-QPushButton *MenuGraphic::ExitButton() {
+QPushButton *MenuGraphic::ExitButton(int id) {
     QPushButton *exitButton = new QPushButton("🚪");
 
     exitButton->setCursor(Qt::PointingHandCursor);
     exitButton->setFocusPolicy(Qt::StrongFocus);
     exitButton->setFixedSize(96, 96);
 
-    exitButton->setStyleSheet("QPushButton {"
-                              "  border: none;"
-                              "  font-size:36px;"
-                              "  color:#ffffff;"
-                              "  background:#2E2E2E;"
-                              "}"
-                              "QPushButton:hover { background:#4a4a4a; }"
-                              "QPushButton:pressed { background:#2f2f2f; }"
-                              "QPushButton:focus {"
-                              "  background:#3a3a3a;"
-                              "  outline: none;"
-                              "}");
+    {
+        exitButton->setFocusPolicy(Qt::NoFocus);
+
+        exitButton->setObjectName("menu-button");
+        exitButton->setProperty("menu-button", "true");
+        exitButton->setProperty("active", (id == _currentButton) ? "true" : "false");
+
+        exitButton->setAutoFillBackground(true);
+        exitButton->setAttribute(Qt::WA_StyledBackground, true);
+
+        exitButton->style()->unpolish(exitButton);
+        exitButton->style()->polish(exitButton);
+        exitButton->update();
+    }
 
     // Event
     {
@@ -146,4 +199,35 @@ QPushButton *MenuGraphic::ExitButton() {
         QObject::connect(exitButton, &QPushButton::clicked, exitButton, [this]() { QApplication::quit(); });
     }
     return exitButton;
+}
+
+
+void MenuGraphic::UPDT_MenuButton(int previous, int current) {
+
+    /*
+     * Update Buttons
+     * Fetch the previous button
+     * Fetch the current button
+     * Swap them
+     */
+
+    // Set the previous to false
+    if (previous >= 0 && previous < static_cast<int>(_buttons.size())) {
+        if (auto btn = _buttons[previous]) {
+            btn->setProperty("active", "false");
+            btn->style()->unpolish(btn);
+            btn->style()->polish(btn);
+            btn->update();
+        }
+    }
+
+    // Set the current to true
+    if (current >= 0 && current < static_cast<int>(_buttons.size())) {
+        if (auto btn = _buttons[current]) {
+            btn->setProperty("active", "true");
+            btn->style()->unpolish(btn);
+            btn->style()->polish(btn);
+            btn->update();
+        }
+    }
 }

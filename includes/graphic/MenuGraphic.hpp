@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QUrl>
 #include <QVBoxLayout>
+#include <QShortcut>
 #include <QWidget>
 #include <functional>
 #include <memory>
@@ -32,11 +33,14 @@ public:
     void SetRedraw(std::function<void()> redraw) { _redraw = std::move(redraw); }
 
 private:
-    QPushButton *WorkflowButton();
-    QPushButton *SettingButton();
-    QPushButton *ExitButton();
-
+    QPushButton *WorkflowButton(int);
+    QPushButton *SettingButton(int);
+    QPushButton *ExitButton(int);
+    void UPDT_MenuButton(int, int);
     std::function<void()> _redraw;
     std::vector<QPushButton*> _buttons;
     int _currentButton;
+    QShortcut *_menuGraphicShortcutLeft = nullptr;
+    QShortcut *_menuGraphicShortcutRight = nullptr;
+    QShortcut *_menuGraphicShortcutEnter = nullptr;
 };
