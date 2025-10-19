@@ -18,13 +18,11 @@ void WorkflowGraphic::DrawBody(QVBoxLayout *layout) {
     if (!layout) return;
 
     // Create layout
-    if (_layout == nullptr) {
-        auto *body = new QWidget;
-        _layout = new QVBoxLayout(body);
-        _layout->setContentsMargins(0, 0, 0, 0);
-        _layout->setSpacing(0);
-        layout->addWidget(body);
-    }
+    auto *body = new QWidget;
+    _layout = new QVBoxLayout(body);
+    _layout->setContentsMargins(0, 0, 0, 0);
+    _layout->setSpacing(0);
+    layout->addWidget(body);
 
     // Draw tabs
     {

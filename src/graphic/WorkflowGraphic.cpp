@@ -22,12 +22,19 @@ WorkflowGraphic::WorkflowGraphic(std::shared_ptr<Application> application) : IGr
 
 void WorkflowGraphic::Draw(QVBoxLayout *layout) {
 
+    std::cout << "Workflow" << std::endl;
 
     // Draw Header
     DrawHeader(layout);
 
+    std::cout << "Workflow 1" << std::endl;
+
+
     // Draw Body
     DrawBody(layout);
+
+    std::cout << "Workflow 2" << std::endl;
+
 }
 
 Tab WorkflowGraphic::GetTab() {

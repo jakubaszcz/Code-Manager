@@ -21,8 +21,6 @@ void MenuGraphic::Draw(QVBoxLayout *layout) {
         _currentButton = 0;
     }
 
-    std::cout << _currentButton << std::endl;
-
     QWidget *parentWidget = layout->parentWidget();
 
     {
@@ -92,9 +90,6 @@ void MenuGraphic::Draw(QVBoxLayout *layout) {
 
 
 QPushButton *MenuGraphic::WorkflowButton(int id) {
-    std::cout << "CID =" << _currentButton << std::endl;
-    std::cout << "ID =" << id << std::endl;
-
     QPushButton *workflowButton = new QPushButton("🖥️");
 
     workflowButton->setCursor(Qt::PointingHandCursor);

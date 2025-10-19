@@ -35,6 +35,7 @@ public:
     explicit Software(std::shared_ptr<Application> application);
 
     void Draw();
+    void SetWindows();
     void SetWindowSize(WindowSize);
     WindowSize GetWindowSize() const;
 
@@ -47,4 +48,5 @@ private:
     // Application with everything I need
     std::shared_ptr<Application> _application;
     WindowSize _windowSize{1200, 800};
+    QShortcut *_softwareShortcutEscape = nullptr;
 };

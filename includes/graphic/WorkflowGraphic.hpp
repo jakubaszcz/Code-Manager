@@ -43,9 +43,8 @@ public:
     void SetTab(Tab tab);
     Tab GetTab();
 
-private:
     void RebuildBody(); // Tab Changing
-
+private:
     // Workflow tab
     void DrawWorkflowTab(QWidget *);
     QWidget *FileManagerRow(int);

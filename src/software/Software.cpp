@@ -18,8 +18,10 @@ Software::Software(std::shared_ptr<Application> app) : _application(std::move(ap
 
 
 void Software::Draw() {
+    std::cout << "Draw" << std::endl;
     static QWidget *window = nullptr;
 
+    std::cout << "1" << std::endl;
     if (!window) {
         window = new QWidget();
         window->resize(_windowSize.width, _windowSize.height);
@@ -31,9 +33,12 @@ void Software::Draw() {
         mLayout->setSpacing(0);
     }
 
-    auto *escape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
-    QObject::connect(escape, &QShortcut::activated, window, [this]() {
+    std::cout << "2" << std::endl;
+
+    _softwareShortcutEscape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
+    QObject::connect(_softwareShortcutEscape, &QShortcut::activated, window, [this]() {
         switch (_application->GetCurrentWindow()) {
+            std::cout << "Closing" << std::endl;
             case Windows::Workflow:
                 _application->SetCurrentWindow(Windows::Menu);
                 Draw();
@@ -43,6 +48,9 @@ void Software::Draw() {
         }
     });
 
+    std::cout << "3" << std::endl;
+
+
     auto *mLayout = qobject_cast<QVBoxLayout *>(window->layout());
     QLayoutItem *child;
     while ((child = mLayout->takeAt(0)) != nullptr) {
@@ -51,8 +59,14 @@ void Software::Draw() {
         delete child;
     }
 
-    QWidget *bWidget = new QWidget();
-    QVBoxLayout *bWidgetLayout = new QVBoxLayout(bWidget);
+    std::cout << "4" << std::endl;
+
+
+    auto *bWidget = new QWidget();
+    auto *bWidgetLayout = new QVBoxLayout(bWidget);
+
+    std::cout << "5" << std::endl;
+
 
     switch (_application->GetCurrentWindow()) {
         case Windows::Menu:
@@ -68,6 +82,9 @@ void Software::Draw() {
         default:
             break;
     }
+
+    std::cout << "6" << std::endl;
+
     mLayout->addWidget(bWidget);
     window->show();
 }
