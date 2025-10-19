@@ -1,0 +1,23 @@
+QPushButton[menu-button="true"] {
+    border: none;
+    font-size: 36px;
+    color: #ffffff;
+    background: #2E2E2E;
+}
+
+QPushButton[menu-button="true"]:hover {
+    background: #4a4a4a;
+}
+
+QPushButton[menu-button="true"]:pressed {
+    background: #2f2f2f;
+}
+
+QPushButton[menu-button="true"]:focus {
+    background: #3a3a3a;
+    outline: none;
+}
+
+QPushButton[menu-button="true"][active="true"] {
+    background: #007acc;
+}

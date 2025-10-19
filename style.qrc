@@ -4,5 +4,6 @@
         <file>styles/main/CommandTab.qss</file>
         <file>styles/main/BodyGraphic.qss</file>
         <file>styles/main/HeaderGraphic.qss</file>
+        <file>styles/main/MenuGraphic.qss</file>
     </qresource>
 </RCC>
