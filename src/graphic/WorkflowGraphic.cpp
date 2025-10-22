@@ -24,6 +24,9 @@ void WorkflowGraphic::Draw(QVBoxLayout *layout) {
 
     std::cout << "Workflow" << std::endl;
 
+    if (_application->GetCurrentWindow() == Windows::Workflow)
+        std::cout << "ENUM : Workflow" << std::endl;
+
     // Draw Header
     DrawHeader(layout);
 

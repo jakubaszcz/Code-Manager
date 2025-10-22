@@ -37,9 +37,13 @@ void Software::Draw() {
 
     _softwareShortcutEscape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
     QObject::connect(_softwareShortcutEscape, &QShortcut::activated, window, [this]() {
+        std::cout << "Escape" << std::endl;
         switch (_application->GetCurrentWindow()) {
-            std::cout << "Closing" << std::endl;
             case Windows::Workflow:
+                _application->SetCurrentWindow(Windows::Menu);
+                Draw();
+                break;
+            case Windows::Setting:
                 _application->SetCurrentWindow(Windows::Menu);
                 Draw();
                 break;
