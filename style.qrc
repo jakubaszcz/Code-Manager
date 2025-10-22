@@ -5,5 +5,6 @@
         <file>styles/main/BodyGraphic.qss</file>
         <file>styles/main/HeaderGraphic.qss</file>
         <file>styles/main/MenuGraphic.qss</file>
+        <file>styles/main/Window.qss</file>
     </qresource>
 </RCC>

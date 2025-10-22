@@ -60,15 +60,19 @@ bool Data::CreateDefaultConfig() {
 
 
 void Data::LoadConfig() {
+
+    // Load config file
     std::ifstream file("config.cfg");
     if (!file.is_open()) {
         std::cerr << "ERROR: Cannot open config.cfg" << std::endl;
         return;
     }
 
+    // Clear for every load
     _configMap.clear();
 
 
+    // Fetch the data
     std::string line;
     while (std::getline(file, line)) {
         auto pos = line.find('=');

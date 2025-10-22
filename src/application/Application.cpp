@@ -96,6 +96,7 @@ int Application::Run(int argc, char *argv[]) {
         ":/styles/main/BodyGraphic.qss",
         ":/styles/main/HeaderGraphic.qss",
         ":/styles/main/MenuGraphic.qss",
+        ":/styles/main/Window.qss",
     };
 
     // Merged all those file to have one big QSS

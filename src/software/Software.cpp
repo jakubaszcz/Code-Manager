@@ -34,6 +34,18 @@ void Software::Draw() {
         mLayout->setSpacing(0);
     }
 
+
+    window->setObjectName("window-widget");
+    window->setProperty("window-widget", "true");
+
+    window->setAutoFillBackground(true);
+    window->setAttribute(Qt::WA_StyledBackground, true);
+
+    window->style()->unpolish(window);
+    window->style()->polish(window);
+    window->update();
+
+
     // Create the escape key callback
     {
         if (!_softwareShortcutEscape) {

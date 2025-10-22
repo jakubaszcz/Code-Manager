@@ -1,0 +1,3 @@
+QWidget[window-widget="true"] {
+    background: #1e1e1e;
+}
