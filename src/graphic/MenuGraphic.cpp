@@ -50,7 +50,6 @@ void MenuGraphic::Draw(QVBoxLayout *layout) {
 
         {
             QObject::connect(_menuGraphicShortcutEnter, &QShortcut::activated, parentWidget, [this]() {
-                std::cout << "Enter" << std::endl;
                 QPushButton *button = _buttons[_currentButton];
                 if (button) {
                     button->click();

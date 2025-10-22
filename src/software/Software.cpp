@@ -18,10 +18,8 @@ Software::Software(std::shared_ptr<Application> app) : _application(std::move(ap
 
 
 void Software::Draw() {
-    std::cout << "Draw" << std::endl;
     static QWidget *window = nullptr;
 
-    std::cout << "1" << std::endl;
     if (!window) {
         window = new QWidget();
         window->resize(_windowSize.width, _windowSize.height);
@@ -33,26 +31,25 @@ void Software::Draw() {
         mLayout->setSpacing(0);
     }
 
-    std::cout << "2" << std::endl;
 
-    _softwareShortcutEscape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
-    QObject::connect(_softwareShortcutEscape, &QShortcut::activated, window, [this]() {
-        std::cout << "Escape" << std::endl;
-        switch (_application->GetCurrentWindow()) {
-            case Windows::Workflow:
-                _application->SetCurrentWindow(Windows::Menu);
-                Draw();
-                break;
-            case Windows::Setting:
-                _application->SetCurrentWindow(Windows::Menu);
-                Draw();
-                break;
-            default:
-                break;
+    {
+        if (!_softwareShortcutEscape) {
+            _softwareShortcutEscape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
+            QObject::connect(_softwareShortcutEscape, &QShortcut::activated, window, [this]() {
+                switch (_application->GetCurrentWindow()) {
+                    case Windows::Workflow:
+                    case Windows::Setting:
+                        _application->SetCurrentWindow(Windows::Menu);
+                        Draw();
+                        break;
+                    default:
+                        break;
+                }
+            });
         }
-    });
+    }
 
-    std::cout << "3" << std::endl;
+
 
 
     auto *mLayout = qobject_cast<QVBoxLayout *>(window->layout());
@@ -63,13 +60,11 @@ void Software::Draw() {
         delete child;
     }
 
-    std::cout << "4" << std::endl;
 
 
     auto *bWidget = new QWidget();
     auto *bWidgetLayout = new QVBoxLayout(bWidget);
 
-    std::cout << "5" << std::endl;
 
 
     switch (_application->GetCurrentWindow()) {
@@ -87,7 +82,6 @@ void Software::Draw() {
             break;
     }
 
-    std::cout << "6" << std::endl;
 
     mLayout->addWidget(bWidget);
     window->show();

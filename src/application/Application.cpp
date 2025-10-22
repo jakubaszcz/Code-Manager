@@ -69,38 +69,12 @@ std::shared_ptr<Audio> Application::GetAudio() const {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-void Application::SetCurrentWindow(Windows window) {
-    switch (GetCurrentWindow()) {
-        case Windows::Workflow:
-            std::cout << "Closing Workflow" << std::endl;
-            break;
-        case Windows::Setting:
-            std::cout << "Closing Setting" << std::endl;
-            break;
-        case Windows::Menu:
-            std::cout << "Closing Menu" << std::endl;
-            break;
-        default: break;
-    }
-    _currentWindow = window;
-    switch (GetCurrentWindow()) {
-        case Windows::Workflow:
-            std::cout << "Opening Workflow" << std::endl;
-            break;
-        case Windows::Setting:
-            std::cout << "Opening Setting" << std::endl;
-            break;
-        case Windows::Menu:
-            std::cout << "Opening Menu" << std::endl;
-            break;
-        default: break;
-    }
-}
-
-
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
+void Application::SetCurrentWindow(Windows window) {
+    _currentWindow = window;
+}
 Windows Application::GetCurrentWindow() const {
     return _currentWindow;
 }
