@@ -13,6 +13,7 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <any>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -52,6 +53,35 @@ public:
     std::shared_ptr<Audio> GetAudio() const;
     void SetCurrentWindow(Windows window);
     Windows GetCurrentWindow() const;
+
+    template <typename T>
+    void StyleSheetSimple(T widget, std::string component) {
+        widget->setObjectName(component.c_str());
+        widget->setProperty(component.c_str(), "true");
+
+        widget->setFocusPolicy(Qt::NoFocus);
+        widget->setAutoFillBackground(true);
+        widget->setAttribute(Qt::WA_StyledBackground, true);
+
+        widget->style()->unpolish(widget);
+        widget->style()->polish(widget);
+        widget->update();
+    }
+
+    template <typename T>
+    void StyleSheetMultiple(T widget, std::string component, int compared, int comparator) {
+        widget->setObjectName(component.c_str());
+        widget->setProperty(component.c_str(), "true");
+        widget->setProperty("active", (compared == comparator) ? "true" : "false");
+
+        widget->setFocusPolicy(Qt::NoFocus);
+        widget->setAutoFillBackground(true);
+        widget->setAttribute(Qt::WA_StyledBackground, true);
+
+        widget->style()->unpolish(widget);
+        widget->style()->polish(widget);
+        widget->update();
+    }
 
 private:
     // Data class
