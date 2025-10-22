@@ -18,8 +18,11 @@ Software::Software(std::shared_ptr<Application> app) : _application(std::move(ap
 
 
 void Software::Draw() {
+
+    // Create the window
     static QWidget *window = nullptr;
 
+    // Verification if the window was created
     if (!window) {
         window = new QWidget();
         window->resize(_windowSize.width, _windowSize.height);
@@ -31,59 +34,64 @@ void Software::Draw() {
         mLayout->setSpacing(0);
     }
 
-
+    // Create the escape key callback
     {
         if (!_softwareShortcutEscape) {
-            _softwareShortcutEscape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
-            QObject::connect(_softwareShortcutEscape, &QShortcut::activated, window, [this]() {
-                switch (_application->GetCurrentWindow()) {
-                    case Windows::Workflow:
-                    case Windows::Setting:
-                        _application->SetCurrentWindow(Windows::Menu);
-                        Draw();
-                        break;
-                    default:
-                        break;
-                }
-            });
+
+            // Create key callback
+            {
+                _softwareShortcutEscape = new QShortcut(QKeySequence(Qt::Key_Escape), window);
+            }
+
+            // Assign event to the key callback
+            {
+                QObject::connect(_softwareShortcutEscape, &QShortcut::activated, window, [this]() {
+                   switch (_application->GetCurrentWindow()) {
+                       case Windows::Workflow:
+                       case Windows::Setting:
+                           _application->SetCurrentWindow(Windows::Menu);
+                           Draw();
+                           break;
+                       default:
+                           break;
+                   }
+               });
+            }
         }
     }
 
 
-
-
-    auto *mLayout = qobject_cast<QVBoxLayout *>(window->layout());
+    // Create window layout with childs
+    auto *layout = qobject_cast<QVBoxLayout *>(window->layout());
     QLayoutItem *child;
-    while ((child = mLayout->takeAt(0)) != nullptr) {
+    while ((child = layout->takeAt(0)) != nullptr) {
         if (child->widget())
             child->widget()->deleteLater();
         delete child;
     }
 
+    // Create widget and layout's widget
+    auto *widget = new QWidget();
+    auto *widgetLayout = new QVBoxLayout(widget);
 
-
-    auto *bWidget = new QWidget();
-    auto *bWidgetLayout = new QVBoxLayout(bWidget);
-
-
-
+    // Drawing the window by the current enum tag
     switch (_application->GetCurrentWindow()) {
         case Windows::Menu:
-            _menuGraphic->Draw(bWidgetLayout);
+            _menuGraphic->Draw(widgetLayout);
             break;
         case Windows::Setting:
-            _settingsGraphic->Draw(bWidgetLayout);
+            _settingsGraphic->Draw(widgetLayout);
             break;
         case Windows::Workflow: {
-            _workflowGraphic->Draw(bWidgetLayout);
+            _workflowGraphic->Draw(widgetLayout);
             break;
         }
         default:
             break;
     }
 
-
-    mLayout->addWidget(bWidget);
+    // Assign
+    layout->addWidget(widget);
     window->show();
 }
 
