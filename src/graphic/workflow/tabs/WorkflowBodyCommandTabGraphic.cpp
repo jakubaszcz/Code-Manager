@@ -127,6 +127,8 @@ void WorkflowGraphic::AddCommand() {
             NamePopup popup(_commandAddWidget, _application);
             popup.OpenNear(_commandAddWidget);
 
+            if (popup.GetName().empty()) return;
+
             _application->GetData()->AddCommand(popup.GetName());
             RebuildBody();
         };
