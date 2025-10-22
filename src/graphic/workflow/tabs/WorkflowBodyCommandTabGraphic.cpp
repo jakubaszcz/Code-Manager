@@ -115,16 +115,7 @@ void WorkflowGraphic::AddCommand() {
 
     // Style
     {
-        button->setObjectName("add");
-        button->setProperty("add", "true");
-
-        button->setFocusPolicy(Qt::NoFocus);
-        button->setAutoFillBackground(true);
-        button->setAttribute(Qt::WA_StyledBackground, true);
-
-        button->style()->unpolish(button);
-        button->style()->polish(button);
-        button->update();
+        _application->StyleSheetSimple(button, "add");
     }
 
     // Add button to layout
@@ -133,7 +124,7 @@ void WorkflowGraphic::AddCommand() {
     // Event
     {
         auto addAndRefresh = [this]() {
-            NamePopup popup(_commandAddWidget);
+            NamePopup popup(_commandAddWidget, _application);
             popup.OpenNear(_commandAddWidget);
 
             _application->GetData()->AddCommand(popup.GetName());
@@ -173,17 +164,7 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
 
     // Style
     {
-        button_execute->setObjectName("command");
-        button_execute->setProperty("command", "true");
-        button_execute->setProperty("active", (id == _currentKeyboardEventCommand) ? "true" : "false");
-
-        button_execute->setFocusPolicy(Qt::NoFocus);
-        button_execute->setAutoFillBackground(true);
-        button_execute->setAttribute(Qt::WA_StyledBackground, true);
-
-        button_execute->style()->unpolish(button_execute);
-        button_execute->style()->polish(button_execute);
-        button_execute->update();
+        _application->StyleSheetMultiple(button_execute, "command", id, _currentKeyboardEventCommand);
     }
 
     // Create line
@@ -198,16 +179,7 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
 
     // Style
     {
-        input->setObjectName("input");
-        input->setProperty("input", "true");
-
-        input->setFocusPolicy(Qt::StrongFocus);
-        input->setAutoFillBackground(true);
-        input->setAttribute(Qt::WA_StyledBackground, true);
-
-        input->style()->unpolish(input);
-        input->style()->polish(input);
-        input->update();
+        _application->StyleSheetSimple(input, "command");
     }
 
     // Create button
@@ -217,16 +189,7 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
 
     // Style
     {
-        button_remove->setObjectName("remove");
-        button_remove->setProperty("remove", "true");
-
-        button_remove->setFocusPolicy(Qt::NoFocus);
-        button_remove->setAutoFillBackground(true);
-        button_remove->setAttribute(Qt::WA_StyledBackground, true);
-
-        button_remove->style()->unpolish(button_remove);
-        button_remove->style()->polish(button_remove);
-        button_remove->update();
+        _application->StyleSheetSimple(button_remove, "remove");
     }
 
 
@@ -262,7 +225,7 @@ QWidget *WorkflowGraphic::Command(const std::string& code, int id) {
             if (!newDir.isEmpty())
                 QDir::setCurrent(newDir);
 
-            auto* terminal = new TerminalPopup(widget);
+            auto* terminal = new TerminalPopup(widget, _application);
             terminal->show();
             terminal->StartCommand(command, {});
             terminal->Draw();
@@ -309,15 +272,8 @@ void WorkflowGraphic::CONST_CommandButtonsBox() {
         _commandScrollArea->setFrameShape(QFrame::NoFrame);
         _commandScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
-        _commandScrollArea->setObjectName("scroll");
-        _commandScrollArea->setProperty("scroll", "true");
 
-        _commandScrollArea->setAutoFillBackground(true);
-        _commandScrollArea->setAttribute(Qt::WA_StyledBackground, true);
-
-        _commandScrollArea->style()->unpolish(_commandScrollArea);
-        _commandScrollArea->style()->polish(_commandScrollArea);
-        _commandScrollArea->update();
+        _application->StyleSheetSimple(_commandScrollArea, "scroll");
     }
 
     // Keyboard events

@@ -96,19 +96,7 @@ QPushButton *MenuGraphic::WorkflowButton(int id) {
     workflowButton->setFixedSize(96, 96);
 
     {
-        workflowButton->setFocusPolicy(Qt::NoFocus);
-
-        workflowButton->setObjectName("menu-button");
-        workflowButton->setProperty("menu-button", "true");
-        workflowButton->setProperty("active", (id == _currentButton) ? "true" : "false");
-
-
-        workflowButton->setAutoFillBackground(true);
-        workflowButton->setAttribute(Qt::WA_StyledBackground, true);
-
-        workflowButton->style()->unpolish(workflowButton);
-        workflowButton->style()->polish(workflowButton);
-        workflowButton->update();
+        _application->StyleSheetMultiple(workflowButton, "menu-button", id, _currentButton);
     }
 
     // Event
@@ -135,18 +123,8 @@ QPushButton *MenuGraphic::SettingButton(int id) {
     settingButton->setFixedSize(96, 96);
 
     {
-        settingButton->setFocusPolicy(Qt::NoFocus);
 
-        settingButton->setObjectName("menu-button");
-        settingButton->setProperty("menu-button", "true");
-        settingButton->setProperty("active", (id == _currentButton) ? "true" : "false");
-
-        settingButton->setAutoFillBackground(true);
-        settingButton->setAttribute(Qt::WA_StyledBackground, true);
-
-        settingButton->style()->unpolish(settingButton);
-        settingButton->style()->polish(settingButton);
-        settingButton->update();
+        _application->StyleSheetMultiple(settingButton, "menu-button", id, _currentButton);
     }
 
     // Event
@@ -173,18 +151,8 @@ QPushButton *MenuGraphic::ExitButton(int id) {
     exitButton->setFixedSize(96, 96);
 
     {
-        exitButton->setFocusPolicy(Qt::NoFocus);
+        _application->StyleSheetMultiple(exitButton, "menu-button", id, _currentButton);
 
-        exitButton->setObjectName("menu-button");
-        exitButton->setProperty("menu-button", "true");
-        exitButton->setProperty("active", (id == _currentButton) ? "true" : "false");
-
-        exitButton->setAutoFillBackground(true);
-        exitButton->setAttribute(Qt::WA_StyledBackground, true);
-
-        exitButton->style()->unpolish(exitButton);
-        exitButton->style()->polish(exitButton);
-        exitButton->update();
     }
 
     // Event

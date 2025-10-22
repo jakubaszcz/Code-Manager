@@ -65,18 +65,7 @@ QWidget *WorkflowGraphic::FileManagerRow(int id) {
 
     // Button style
     {
-        button->setFocusPolicy(Qt::NoFocus);
-
-        button->setObjectName("workflow");
-        button->setProperty("workflow", "true");
-        button->setProperty("active", (id == _currentKeyboardEventWorkflow) ? "true" : "false");
-
-        button->setAutoFillBackground(true);
-        button->setAttribute(Qt::WA_StyledBackground, true);
-
-        button->style()->unpolish(button);
-        button->style()->polish(button);
-        button->update();
+        _application->StyleSheetMultiple(button, "workflow", id, _currentKeyboardEventWorkflow);
     }
 
     // Event
@@ -127,18 +116,7 @@ QWidget *WorkflowGraphic::TerminalRow(int id) {
 
     // Button style
     {
-        button->setFocusPolicy(Qt::NoFocus);
-
-        button->setObjectName("workflow");
-        button->setProperty("workflow", "true");
-        button->setProperty("active", (id == _currentKeyboardEventWorkflow) ? "true" : "false");
-
-        button->setAutoFillBackground(true);
-        button->setAttribute(Qt::WA_StyledBackground, true);
-
-        button->style()->unpolish(button);
-        button->style()->polish(button);
-        button->update();
+        _application->StyleSheetMultiple(button, "workflow", id, _currentKeyboardEventWorkflow);
     }
 
     // Event

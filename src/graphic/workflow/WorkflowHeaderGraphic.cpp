@@ -33,17 +33,8 @@ void WorkflowGraphic::DrawHeader(QVBoxLayout *layout) {
 
     // Styling the button
     {
-        button->setFocusPolicy(Qt::NoFocus);
 
-        button->setObjectName("header-graphic-button-open-directory");
-        button->setProperty("header-graphic-button-open-directory", "true");
-
-        button->setAutoFillBackground(true);
-        button->setAttribute(Qt::WA_StyledBackground, true);
-
-        button->style()->unpolish(button);
-        button->style()->polish(button);
-        button->update();
+        _application->StyleSheetSimple(button, "header-graphic-button-open-directory");
     }
 
     // Setup key events

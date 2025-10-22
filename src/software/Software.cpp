@@ -35,15 +35,7 @@ void Software::Draw() {
     }
 
 
-    window->setObjectName("window-widget");
-    window->setProperty("window-widget", "true");
-
-    window->setAutoFillBackground(true);
-    window->setAttribute(Qt::WA_StyledBackground, true);
-
-    window->style()->unpolish(window);
-    window->style()->polish(window);
-    window->update();
+    _application->StyleSheetSimple(window, "window-widget");
 
 
     // Create the escape key callback

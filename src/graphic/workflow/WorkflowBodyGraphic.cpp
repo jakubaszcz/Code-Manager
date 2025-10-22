@@ -117,16 +117,8 @@ QPushButton *WorkflowGraphic::Tabs(const std::string& label, std::function<void(
     button->setFocusPolicy(Qt::NoFocus);
 
     // Style
-    button->setObjectName("tab");
-    button->setProperty("tab", "true");
-    button->setProperty("active", (tab == _tab) ? "true" : "false");
 
-    button->setAutoFillBackground(true);
-    button->setAttribute(Qt::WA_StyledBackground, true);
-
-    button->style()->unpolish(button);
-    button->style()->polish(button);
-    button->update();
+    _application->StyleSheetMultiple(button, "tab", static_cast<int>(tab), static_cast<int>(_tab));
 
     // Event
     QObject::connect(button, &QPushButton::clicked, button, [onClick]() { onClick(); });
