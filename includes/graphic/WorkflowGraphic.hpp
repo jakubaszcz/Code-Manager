@@ -49,6 +49,7 @@ private:
     void DrawWorkflowTab(QWidget *);
     QWidget *FileManagerRow(int);
     QWidget *TerminalRow(int);
+    QWidget *TouchFileRow(int);
     void CONST_WorkflowButtonsBox();
     void UPDT_WorflowButton(int, int);
 

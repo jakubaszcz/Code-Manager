@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QStyle>
 #include "../../../../includes/graphic/WorkflowGraphic.hpp"
+#include "../../../../includes/graphic/utils/popup/NamePopup.hpp"
 
 
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -167,6 +168,70 @@ QWidget *WorkflowGraphic::TerminalRow(int id) {
 }
 
 
+QWidget *WorkflowGraphic::TouchFileRow(int id) {
+
+    // Create widget
+    auto *widget = new QWidget;
+
+    // Create widget's layout
+    auto *layout = new QHBoxLayout(widget);
+
+    // Set layout's properties
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    // Create button
+    const auto title = "Create File";
+
+    auto *button = new QPushButton(title, widget);
+    if (!button)
+        return nullptr;
+
+    // Button style
+    {
+        _application->StyleSheetMultiple(button, "workflow", id, _currentKeyboardEventWorkflow);
+    }
+
+    // Event
+    {
+
+        QObject::connect(button, &QPushButton::clicked, [this, widget]() {
+            NamePopup popup(widget, _application);
+            popup.OpenNear(widget);
+
+            if (popup.exec() == QDialog::Accepted) {
+                const std::string& name = popup.GetName();
+
+                if (name.empty()) return;
+
+                const auto oldDir = QDir::currentPath();
+                const auto newDir = QString::fromStdString(_application->GetData()->GetConfigMap()["wpath"]);
+                if (!newDir.isEmpty())
+                QDir::setCurrent(newDir);
+
+                std::ofstream outfile(name);
+                if (outfile.is_open()) {
+                    outfile.close();
+                }
+
+                QDir::setCurrent(oldDir);
+
+            }
+        });
+    }
+
+
+    // Add button to layout
+    layout->addWidget(button, 1);
+
+    // Set focus proxy
+    widget->setFocusProxy(button);
+
+    // Return
+    return widget;
+}
+
+
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
@@ -233,6 +298,10 @@ void WorkflowGraphic::CONST_WorkflowButtonsBox() {
             _keyboardEventWorkflow.push_back(w);
         }
         if (QWidget *w = TerminalRow(1)) {
+            boxLayout->addWidget(w);
+            _keyboardEventWorkflow.push_back(w);
+        }
+        if (QWidget *w = TouchFileRow(2)) {
             boxLayout->addWidget(w);
             _keyboardEventWorkflow.push_back(w);
         }

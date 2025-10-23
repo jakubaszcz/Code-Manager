@@ -19,7 +19,6 @@ NamePopup::NamePopup(QWidget *parent, const std::shared_ptr<Application>& applic
 void NamePopup::Draw() {
     auto *layout = new QVBoxLayout(this);
 
-
     auto *input = new QLineEdit(this);
     input->setPlaceholderText("Set command...");
     input->setClearButtonEnabled(true);
@@ -27,14 +26,13 @@ void NamePopup::Draw() {
 
     _application->StyleSheetSimple(input, "command");
 
-    {
-        QObject::connect(input, &QLineEdit::returnPressed, this, [this, input]() {
-            _name = input->text().toStdString();
-            close();
-        });
-    }
+    QObject::connect(input, &QLineEdit::returnPressed, this, [this, input]() {
+        _name = input->text().toStdString();
+        accept(); // Au lieu de close()
+    });
 
     layout->addWidget(input);
+    input->setFocus(); // Mettre le focus sur l'input
 }
 
 
