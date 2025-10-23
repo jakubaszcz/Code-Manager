@@ -7,7 +7,7 @@
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-TerminalPopup::TerminalPopup(QWidget *parent) : IPopup(parent), _proc(new QProcess(this)) {
+TerminalPopup::TerminalPopup(QWidget *parent, const std::shared_ptr<Application> application) : IPopup(parent, application), _proc(new QProcess(this)) {
     _view = nullptr;
     _input = nullptr;
     _layout = nullptr;
@@ -41,6 +41,11 @@ void TerminalPopup::StartCommand(const QString& program, const QStringList& args
 #else
     _proc->start("/bin/bash", {"-lc", program + (args.isEmpty() ? "" : " " + args.join(' '))});
 #endif
+}
+
+void TerminalPopup::DrawStyling() {
+    setStyleSheet("QDialog { background: #222; border-radius: 8px; }"
+                  "* { font-size: 14px; color: white; }");
 }
 
 void TerminalPopup::OnReadyStdOut() {

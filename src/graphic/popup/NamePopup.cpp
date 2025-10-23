@@ -1,4 +1,5 @@
 #include "../../../includes/graphic/utils/popup/NamePopup.hpp"
+#include "../../../includes/application/Application.hpp"
 #include <QLineEdit>
 #include <QVBoxLayout>
 #include <string>
@@ -8,7 +9,7 @@
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
-NamePopup::NamePopup(QWidget *parent) : IPopup(parent) {
+NamePopup::NamePopup(QWidget *parent, const std::shared_ptr<Application>& application) : IPopup(parent, application) {
 }
 
 
@@ -23,8 +24,8 @@ void NamePopup::Draw() {
     input->setPlaceholderText("Set command...");
     input->setClearButtonEnabled(true);
     input->setFixedWidth(240);
-    input->setStyleSheet("QLineEdit { background: #1e1e1e; color: white; border: 1px solid #3a3a3a; padding: 6px 8px; }"
-                         "QLineEdit:focus { border: 1px solid #5a5a5a; }");
+
+    _application->StyleSheetSimple(input, "command");
 
     {
         QObject::connect(input, &QLineEdit::returnPressed, this, [this, input]() {

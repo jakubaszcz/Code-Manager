@@ -15,10 +15,13 @@
 
 class TerminalPopup : public IPopup {
     public:
-        explicit TerminalPopup(QWidget *parent = nullptr);
+        explicit TerminalPopup(QWidget *parent, std::shared_ptr<Application> application);
 
         void Draw();
         void StartCommand(const QString& program, const QStringList& args = {});
+    protected:
+        void DrawStyling() override;
+
     private :
         void OnReadyStdOut();
         void OnReadyStdErr();

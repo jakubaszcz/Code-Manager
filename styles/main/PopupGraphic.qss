@@ -1,0 +1,5 @@
+LineEdit[name-popup-line_edit="true"] {
+    background: #1e1e1e; color: white; border: 1px solid #3a3a3a; padding: 6px 8px;
+}
+
+QLineEdit[name-popup-line_edit="true"]:focus { border: 1px solid #5a5a5a; }

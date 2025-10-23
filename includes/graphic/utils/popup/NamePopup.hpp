@@ -12,7 +12,7 @@
 
 class NamePopup : public IPopup {
 public:
-    explicit NamePopup(QWidget *parent = nullptr);
+    explicit NamePopup(QWidget *parent, const std::shared_ptr<Application>& application);
     const std::string& GetName() const;
 
 protected:

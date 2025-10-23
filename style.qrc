@@ -6,5 +6,6 @@
         <file>styles/main/HeaderGraphic.qss</file>
         <file>styles/main/MenuGraphic.qss</file>
         <file>styles/main/Window.qss</file>
+        <file>styles/main/PopupGraphic.qss</file>
     </qresource>
 </RCC>

@@ -13,9 +13,10 @@ IPopup::IPopup(QWidget *parent) : QDialog(parent) {
 // ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 
+// ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
 void IPopup::DrawStyling() {
-    setStyleSheet("QDialog { background: white; border-radius: 8px; }"
-                  "* { font-size: 14px; }");
 }
 
 
