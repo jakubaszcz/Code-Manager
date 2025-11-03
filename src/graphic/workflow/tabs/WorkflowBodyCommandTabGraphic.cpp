@@ -304,6 +304,7 @@ void WorkflowGraphic::CONST_CommandButtonsBox() {
         });
 
         QObject::connect(_commandShortcutDelete, &QShortcut::activated, _commandScrollArea, [this]() {
+            if (_keyboardEventCommand.empty()) return;
             auto *widget = _keyboardEventCommand[_currentKeyboardEventCommand];
             if (widget) {
                 QPushButton *removeBtn = widget->findChild<QPushButton *>("remove");
